@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover unique browser games forged by PIXAFORGE.">
+    <meta name="theme-color" content="#09080f">
+    <title>PIXAFORGE — Forge Your Experience</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Oxanium:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor-glow"></div>
+<div class="background-glow"></div>
+<div class="background-grid"></div>
+
+<header class="site-header">
+    <a href="#home" class="logo">
+        <img src="word.png" alt="PIXAFORGE">
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+        <a href="#home">HOME</a>
+        <a href="#games">GAMES</a>
+        <a href="#about">ABOUT</a>
+    </nav>
+
+    <a href="#games" class="header-button">EXPLORE GAMES ↗</a>
+</header>
+
+<main>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-tag">
+                <span class="status-dot"></span>
+                THE NEXT LEVEL STARTS HERE
+            </div>
+
+            <h1>FORGE YOUR <span>EXPERIENCE.</span></h1>
+
+            <p class="hero-description">
+                Enter a world of creativity, pixels and endless possibilities.
+                Discover unique games built for your next adventure.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#games" class="primary-button">EXPLORE GAMES ↗</a>
+                <a href="#about" class="secondary-button">DISCOVER PIXAFORGE</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <strong>01</strong>
+                    <span>FIRST RELEASE</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <strong>∞</strong>
+                    <span>NEW EXPERIENCES</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-orbit orbit-one"></div>
+            <div class="hero-orbit orbit-two"></div>
+            <div class="hero-orbit orbit-three"></div>
+
+            <div class="hero-logo">
+                <img src="favicon.png" alt="PIXAFORGE emblem">
+            </div>
+
+            <div class="hero-visual-label">
+                <span>PIXAFORGE</span>
+                <span>EST. 2026</span>
+            </div>
+        </div>
+
+        <div class="hero-bottom">
+            <span>DESIGNED TO PLAY</span>
+            <span>BUILT TO EXPLORE</span>
+        </div>
+    </section>
+
+    <section class="games-section" id="games">
+        <div class="section-heading">
+            <div>
+                <span class="section-label">THE COLLECTION</span>
+                <h2>OUR <span>GAMES.</span></h2>
+            </div>
+            <p>Small worlds. Big experiences. Explore what we've been building.</p>
+        </div>
+
+        <div class="games-grid">
+            <article class="game-card featured-game">
+                <div class="game-art">
+                    <img src="game.png" alt="Cookie Emperor artwork">
+                    <span class="game-category">IDLE / STRATEGY</span>
+                    <span class="game-featured-label">FIRST RELEASE</span>
+                </div>
+
+                <div class="game-info">
+                    <div>
+                        <h3>COOKIE EMPEROR</h3>
+                        <p>Build your kingdom. Bake your legacy.</p>
+                    </div>
+                    <button class="game-play play-game" aria-label="Play Cookie Emperor">↗</button>
+                </div>
+
+                <div class="game-card-bottom">
+                    <span class="game-status-dot"></span>
+                    PLAYABLE NOW
+                </div>
+            </article>
+
+            <article class="game-card">
+                <div class="game-art placeholder-art">
+                    <div class="placeholder-symbol">?</div>
+                    <span class="game-category">ADVENTURE</span>
+                    <span class="placeholder-caption">WORLD IN DEVELOPMENT</span>
+                </div>
+
+                <div class="game-info">
+                    <div>
+                        <h3>UNKNOWN WORLD</h3>
+                        <p>Discover a new adventure.</p>
+                    </div>
+                    <span class="game-play disabled-play">↗</span>
+                </div>
+
+                <div class="game-card-bottom">
+                    <span class="coming-dot"></span>
+                    COMING SOON
+                </div>
+            </article>
+
+            <article class="game-card">
+                <div class="game-art placeholder-art second-art">
+                    <div class="placeholder-symbol">✦</div>
+                    <span class="game-category">PIXEL RPG</span>
+                    <span class="placeholder-caption">WORLD IN DEVELOPMENT</span>
+                </div>
+
+                <div class="game-info">
+                    <div>
+                        <h3>PIXEL QUEST</h3>
+                        <p>Enter a world of pixels.</p>
+                    </div>
+                    <span class="game-play disabled-play">↗</span>
+                </div>
+
+                <div class="game-card-bottom">
+                    <span class="coming-dot"></span>
+                    COMING SOON
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="studio-strip">
+        <div class="strip-line"></div>
+        <p>
+            <span>IDEAS</span><b>✦</b>
+            <span>CREATIVITY</span><b>✦</b>
+            <span>INTERACTION</span><b>✦</b>
+            <span>EXPERIENCE</span>
+        </p>
+        <div class="strip-line"></div>
+    </section>
+
+    <section class="about-section" id="about">
+        <div class="about-panel">
+            <div class="about-content">
+                <span class="section-label">BEHIND THE PIXELS</span>
+                <h2>MORE THAN JUST <span>GAMES.</span></h2>
+
+                <p>
+                    PIXAFORGE is an independent creative gaming project focused on
+                    building interactive experiences directly in your browser.
+                    Every world begins with an idea. Every experience is forged with creativity.
+                </p>
+
+                <a href="#games" class="primary-button">EXPLORE OUR WORLD ↗</a>
+            </div>
+
+            <div class="about-decoration">
+                <div class="about-orbit"></div>
+                <img src="favicon.png" alt="">
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <span class="section-label">YOUR NEXT ADVENTURE AWAITS</span>
+        <h2>READY TO <span>PLAY?</span></h2>
+        <p>Explore the collection and discover what's being forged.</p>
+        <a href="#games" class="primary-button">ENTER THE COLLECTION ↗</a>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="footer-brand-section">
+            <a href="#home" class="footer-logo">
+                <img src="word.png" alt="PIXAFORGE">
+            </a>
+            <p class="footer-description">
+                A creative gaming project forging unique browser-based experiences.
+            </p>
+            <span class="footer-tagline">FORGE YOUR EXPERIENCE.</span>
+        </div>
+
+        <div class="footer-column">
+            <h3>EXPLORE</h3>
+            <a href="#home">Home</a>
+            <a href="#games">Our Games</a>
+            <a href="#about">About Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>THE STUDIO</h3>
+            <a href="#about">Our Mission</a>
+            <a href="#games">Game Collection</a>
+            <a href="#games">First Release</a>
+        </div>
+
+        <div class="footer-status">
+            <h3>STUDIO STATUS</h3>
+            <div class="status-indicator">
+                <span class="status-light"></span>
+                BUILDING NEW WORLDS
+            </div>
+            <p>New ideas are being forged. Stay tuned for future releases.</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <span>© 2026 PIXAFORGE. ALL RIGHTS RESERVED.</span>
+
+        <div class="footer-bottom-links">
+            <a href="#home">BACK TO TOP ↑</a>
+            <a href="#about">ABOUT</a>
+        </div>
+
+        <span class="footer-credit">FORGED WITH CREATIVITY.</span>
+    </div>
+</footer>
+
+<!-- COOKIE EMPEROR GAME -->
+<div class="game-overlay" id="gameOverlay" aria-hidden="true">
+    <div class="game-shell">
+
+        <header class="game-topbar">
+            <button class="game-back" id="closeGame">← EXIT GAME</button>
+
+            <div class="game-brand">
+                <span class="game-brand-icon">🍪</span>
+                <div>
+                    <strong>COOKIE EMPEROR</strong>
+                    <small>THE ROYAL BAKERY</small>
+                </div>
+            </div>
+
+            <div class="game-top-actions">
+                <span class="save-indicator" id="saveIndicator">
+                    <i></i> LOCAL SAVE
+                </span>
+                <button class="game-icon-button" id="gameSettings" aria-label="Settings">⚙</button>
+            </div>
+        </header>
+
+        <div class="game-dashboard">
+            <div class="game-stat">
+                <span>🍪 COOKIE TREASURY</span>
+                <strong id="cookieBalance">0</strong>
+                <small>AVAILABLE COOKIES</small>
+            </div>
+
+            <div class="game-stat">
+                <span>⚡ PRODUCTION</span>
+                <strong id="cookieCps">0</strong>
+                <small>COOKIES PER SECOND</small>
+            </div>
+
+            <div class="game-stat">
+                <span>👑 EMPIRE LEVEL</span>
+                <strong id="empireLevel">1</strong>
+                <small id="empireRank">APPRENTICE BAKER</small>
+            </div>
+        </div>
+
+        <div class="game-progress-wrap">
+            <div class="game-progress-label">
+                <span>NEXT EMPIRE LEVEL</span>
+                <span id="levelProgressText">0 / 100</span>
+            </div>
+            <div class="game-progress">
+                <div id="levelProgressBar"></div>
+            </div>
+        </div>
+
+        <div class="game-event" id="eventBanner">
+            <span>📯</span>
+            <span id="eventText">The kingdom awaits its emperor.</span>
+        </div>
+
+        <div class="game-layout">
+            <section class="cookie-zone">
+                <div class="kingdom-heading">
+                    <span class="game-eyebrow">YOUR KINGDOM</span>
+                    <h2 id="kingdomTitle">The First Bakery</h2>
+                    <p>Your empire begins with a single cookie.</p>
+                </div>
+
+                <div class="cookie-stage">
+                    <div class="cookie-stage-glow"></div>
+
+                    <button class="giant-cookie" id="giantCookie" aria-label="Bake a cookie">
+                        <span class="cookie-face">
+                            <span class="cookie-chip chip-one"></span>
+                            <span class="cookie-chip chip-two"></span>
+                            <span class="cookie-chip chip-three"></span>
+                            <span class="cookie-chip chip-four"></span>
+                            <span class="cookie-chip chip-five"></span>
+                            <span class="cookie-chip chip-six"></span>
+                            <span class="cookie-chip chip-seven"></span>
+                        </span>
+                    </button>
+
+                    <span class="click-hint">CLICK TO BAKE</span>
+                </div>
+
+                <div class="click-power">
+                    ✦ EACH CLICK PRODUCES <strong id="clickPower">1 COOKIE</strong>
+                </div>
+
+                <div class="kingdom-quote" id="kingdomQuote">
+                    "Every empire begins with one batch."
+                </div>
+
+                <div class="achievement-mini">
+                    <span>🏆</span>
+                    <div>
+                        <strong id="achievementCount">0 / 10</strong>
+                        <small>ACHIEVEMENTS UNLOCKED</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="game-store">
+                <div class="store-tabs">
+                    <button class="store-tab active" data-tab="buildings">BUILDINGS</button>
+                    <button class="store-tab" data-tab="workforce">WORKFORCE</button>
+                    <button class="store-tab" data-tab="upgrades">UPGRADES</button>
+                    <button class="store-tab" data-tab="achievements">TROPHIES</button>
+                </div>
+
+                <div class="store-content" id="storeContent"></div>
+            </section>
+        </div>
+
+        <footer class="game-footer">
+            <span>COOKIE EMPEROR</span>
+            <span>BUILD YOUR BAKERY. RULE THE KINGDOM.</span>
+            <button id="resetGame">RESET LOCAL SAVE</button>
+        </footer>
+    </div>
+
+    <div class="game-modal" id="settingsModal" aria-hidden="true">
+        <div class="game-modal-card">
+            <button class="modal-close" id="closeSettings" aria-label="Close settings">×</button>
+
+            <span class="game-eyebrow">GAME OPTIONS</span>
+            <h2>SETTINGS</h2>
+            <p>Progress is stored in this browser on this device.</p>
+
+            <div class="settings-row">
+                <span>Save system</span>
+                <span class="settings-note">Local browser save</span>
+            </div>
+
+            <div class="settings-row">
+                <span>Construction</span>
+                <span class="settings-note">Real-time timers</span>
+            </div>
+
+            <button class="primary-button modal-done" id="settingsDone">
+                CONTINUE PLAYING
+            </button>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
