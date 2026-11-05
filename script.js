@@ -1,430 +1,481 @@
 
-// ==========================================
-// KIWAMI — MAIN JAVASCRIPT
-// ==========================================
+"use strict";
+
+/* =========================================
+   KIWAMI — MAIN JAVASCRIPT
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  /* ---------------------------------------
+     CURRENT YEAR
+  --------------------------------------- */
+
+  const currentYear = document.getElementById("currentYear");
+
+  if (currentYear) {
+    currentYear.textContent = new Date().getFullYear();
+  }
 
 
-// STAR BACKGROUND
+  /* ---------------------------------------
+     MOBILE NAVIGATION
+  --------------------------------------- */
 
-const canvas = document.getElementById("starCanvas");
-const ctx = canvas.getContext("2d");
+  const menuToggle = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
+  const navLinks = document.querySelectorAll(".nav-link, .nav-contact");
 
-let stars = [];
-let canvasWidth = 0;
-let canvasHeight = 0;
+  function closeMobileMenu() {
+    if (!menuToggle || !mainNav) return;
 
-function resizeCanvas() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open navigation menu");
+    mainNav.classList.remove("is-open");
+  }
 
-    canvasWidth = window.innerWidth;
-    canvasHeight = window.innerHeight;
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
 
-    canvas.width = canvasWidth * ratio;
-    canvas.height = canvasHeight * ratio;
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Open navigation menu" : "Close navigation menu"
+      );
 
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      mainNav.classList.toggle("is-open", !isOpen);
+    });
 
-    createStars();
-}
+    navLinks.forEach((link) => {
+      link.addEventListener("click", closeMobileMenu);
+    });
 
-function createStars() {
-    const count = Math.min(
-        Math.floor((canvasWidth * canvasHeight) / 9500),
-        180
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMobileMenu();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const clickedInsideNav =
+        mainNav.contains(event.target) || menuToggle.contains(event.target);
+
+      if (!clickedInsideNav) {
+        closeMobileMenu();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 680) {
+        closeMobileMenu();
+      }
+    });
+  }
+
+
+  /* ---------------------------------------
+     HEADER SCROLL EFFECT
+  --------------------------------------- */
+
+  const siteHeader = document.getElementById("siteHeader");
+
+  function updateHeader() {
+    if (!siteHeader) return;
+
+    if (window.scrollY > 30) {
+      siteHeader.classList.add("header-scrolled");
+    } else {
+      siteHeader.classList.remove("header-scrolled");
+    }
+  }
+
+  window.addEventListener("scroll", updateHeader, { passive: true });
+  updateHeader();
+
+
+  /* ---------------------------------------
+     SCROLL REVEAL
+  --------------------------------------- */
+
+  const revealElements = document.querySelectorAll(".reveal");
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  if ("IntersectionObserver" in window && !reducedMotion) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -35px 0px"
+      }
     );
 
-    stars = Array.from({ length: count }, () => ({
-        x: Math.random() * canvasWidth,
-        y: Math.random() * canvasHeight,
-        radius: Math.random() * 1.2 + 0.2,
-        alpha: Math.random() * 0.6 + 0.15,
-        speed: Math.random() * 0.15 + 0.025
-    }));
-}
-
-function drawStars() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    for (const star of stars) {
-        star.alpha += (Math.random() - 0.5) * 0.025;
-        star.alpha = Math.max(0.1, Math.min(star.alpha, 0.8));
-
-        star.y -= star.speed;
-
-        if (star.y < -5) {
-            star.y = canvasHeight + 5;
-            star.x = Math.random() * canvasWidth;
-        }
-
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(211, 190, 255, ${star.alpha})`;
-        ctx.fill();
-    }
-
-    requestAnimationFrame(drawStars);
-}
-
-resizeCanvas();
-drawStars();
-
-window.addEventListener("resize", resizeCanvas);
-
-
-// HEADER
-
-const siteHeader = document.getElementById("siteHeader");
-
-window.addEventListener("scroll", () => {
-    siteHeader.classList.toggle("scrolled", window.scrollY > 30);
-});
-
-
-// MOBILE NAVIGATION
-
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
-const navLinks = document.querySelectorAll(".nav-link");
-
-menuToggle.addEventListener("click", () => {
-    const isOpen = mainNav.classList.toggle("open");
-
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-});
-
-navLinks.forEach(link => {
-    link.addEventListener("click", () => {
-        mainNav.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
+    revealElements.forEach((element) => {
+      revealObserver.observe(element);
     });
-});
-
-document.addEventListener("click", event => {
-    if (
-        !mainNav.contains(event.target) &&
-        !menuToggle.contains(event.target)
-    ) {
-        mainNav.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
-    }
-});
-
-
-// ACTIVE NAVIGATION
-
-const sections = document.querySelectorAll("main section[id]");
-
-const activeSectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-
-        navLinks.forEach(link => {
-            link.classList.toggle(
-                "active",
-                link.getAttribute("href") === `#${entry.target.id}`
-            );
-        });
+  } else {
+    revealElements.forEach((element) => {
+      element.classList.add("visible");
     });
-}, {
-    rootMargin: "-35% 0px -55% 0px"
-});
-
-sections.forEach(section => activeSectionObserver.observe(section));
+  }
 
 
-// SCROLL REVEAL
+  /* ---------------------------------------
+     ACTIVE NAVIGATION LINK
+  --------------------------------------- */
 
-const revealElements = document.querySelectorAll(".reveal");
+  const sections = document.querySelectorAll("main section[id]");
 
-const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            revealObserver.unobserve(entry.target);
-        }
+  if ("IntersectionObserver" in window) {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const currentId = entry.target.id;
+
+          document.querySelectorAll(".nav-link").forEach((link) => {
+            const isActive =
+              link.getAttribute("href") === `#${currentId}`;
+
+            link.classList.toggle("active", isActive);
+          });
+        });
+      },
+      {
+        rootMargin: "-35% 0px -55% 0px"
+      }
+    );
+
+    sections.forEach((section) => {
+      sectionObserver.observe(section);
     });
-}, {
-    threshold: 0.12
-});
-
-revealElements.forEach(element => revealObserver.observe(element));
+  }
 
 
-// CAROUSEL
+  /* ---------------------------------------
+     GAME CAROUSEL CONTROLS
+  --------------------------------------- */
 
-const gamesTrack = document.getElementById("gamesTrack");
-const carouselPrev = document.getElementById("carouselPrev");
-const carouselNext = document.getElementById("carouselNext");
-const gamesWindow = document.getElementById("gamesWindow");
+  const gamesWindow = document.getElementById("gamesWindow");
+  const gamesTrack = document.getElementById("gamesTrack");
+  const gamesPrev = document.getElementById("gamesPrev");
+  const gamesNext = document.getElementById("gamesNext");
 
-function isMobileLayout() {
-    return window.matchMedia("(max-width: 700px)").matches;
-}
+  function scrollGames(direction) {
+    if (!gamesWindow) return;
 
-carouselNext.addEventListener("click", () => {
-    if (isMobileLayout()) {
-        gamesWindow.scrollBy({
-            left: gamesWindow.clientWidth * 0.8,
-            behavior: "smooth"
-        });
-    } else {
-        gamesTrack.style.animationDirection = "normal";
-        gamesTrack.style.animationPlayState = "running";
-    }
-});
+    const card = gamesWindow.querySelector(".game-card");
+    const cardWidth = card ? card.getBoundingClientRect().width : 300;
+    const gap = window.innerWidth <= 680 ? 13 : 20;
 
-carouselPrev.addEventListener("click", () => {
-    if (isMobileLayout()) {
-        gamesWindow.scrollBy({
-            left: -gamesWindow.clientWidth * 0.8,
-            behavior: "smooth"
-        });
-    } else {
-        gamesTrack.style.animationDirection = "reverse";
-        gamesTrack.style.animationPlayState = "running";
-    }
-});
+    gamesWindow.scrollBy({
+      left: direction * (cardWidth + gap),
+      behavior: "smooth"
+    });
+  }
 
-gamesWindow.addEventListener("mouseenter", () => {
-    if (!isMobileLayout()) {
-        gamesTrack.style.animationPlayState = "paused";
-    }
-});
+  if (gamesPrev) {
+    gamesPrev.addEventListener("click", () => {
+      scrollGames(-1);
+    });
+  }
 
-gamesWindow.addEventListener("mouseleave", () => {
-    gamesTrack.style.animationPlayState = "running";
-});
+  if (gamesNext) {
+    gamesNext.addEventListener("click", () => {
+      scrollGames(1);
+    });
+  }
 
+  // Pause the desktop marquee when the user interacts with it.
+  if (gamesTrack && gamesWindow) {
+    gamesWindow.addEventListener("focusin", () => {
+      gamesTrack.style.animationPlayState = "paused";
+    });
 
-// FOOTER YEAR
-
-document.getElementById("currentYear").textContent =
-    new Date().getFullYear();
+    gamesWindow.addEventListener("focusout", () => {
+      gamesTrack.style.animationPlayState = "";
+    });
+  }
 
 
-// ==========================================
-// SHOOT-STREAK
-// ==========================================
+  /* =======================================
+     SHOOT-STREAK MINI GAME
+  ======================================= */
 
-const shootModal = document.getElementById("shootModal");
-const closeShoot = document.getElementById("closeShoot");
-const modalBackdrop = document.getElementById("modalBackdrop");
+  const shootModal = document.getElementById("shootModal");
+  const closeShoot = document.getElementById("closeShoot");
+  const shootArena = document.getElementById("shootArena");
+  const shootTarget = document.getElementById("shootTarget");
+  const arenaMessage = document.getElementById("arenaMessage");
+  const startShoot = document.getElementById("startShoot");
 
-const shootArena = document.getElementById("shootArena");
-const shootTarget = document.getElementById("shootTarget");
-const arenaMessage = document.getElementById("arenaMessage");
-const startShoot = document.getElementById("startShoot");
+  const scoreDisplay = document.getElementById("shootScore");
+  const timeDisplay = document.getElementById("shootTime");
+  const streakDisplay = document.getElementById("shootStreak");
+  const bestDisplay = document.getElementById("shootBest");
 
-const scoreValue = document.getElementById("scoreValue");
-const streakValue = document.getElementById("streakValue");
-const timeValue = document.getElementById("timeValue");
-const bestValue = document.getElementById("bestValue");
+  const playButtons = document.querySelectorAll(".play-game");
 
-let score = 0;
-let streak = 0;
-let timeLeft = 30;
-let gameRunning = false;
-let gameTimer = null;
+  let score = 0;
+  let streak = 0;
+  let timeLeft = 30;
+  let gameRunning = false;
+  let gameTimer = null;
+  let bestScore = 0;
+  let previousFocus = null;
 
-let bestScore = Number(localStorage.getItem("kiwamiShootBest")) || 0;
+  const BEST_SCORE_KEY = "kiwami_shoot_streak_best";
 
-bestValue.textContent = bestScore;
+  // Load the saved best score safely.
+  try {
+    bestScore = Number(localStorage.getItem(BEST_SCORE_KEY)) || 0;
+  } catch (error) {
+    bestScore = 0;
+  }
+
+  function updateGameStats() {
+    if (scoreDisplay) scoreDisplay.textContent = score;
+    if (timeDisplay) timeDisplay.textContent = timeLeft;
+    if (streakDisplay) streakDisplay.textContent = streak;
+    if (bestDisplay) bestDisplay.textContent = bestScore;
+  }
+
+  updateGameStats();
 
 
-// OPEN
+  /* OPEN GAME */
 
-function openShootGame() {
-    shootModal.classList.add("open");
+  function openShootGame() {
+    if (!shootModal) return;
+
+    previousFocus = document.activeElement;
+
+    shootModal.classList.add("is-open");
     shootModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
 
-    resetShootGame();
-}
+    resetGame();
 
-document.querySelectorAll('[data-game="shoot"]').forEach(button => {
-    button.addEventListener("click", openShootGame);
-});
-
-
-// CLOSE
-
-function closeShootGame() {
-    stopShootGame();
-
-    shootModal.classList.remove("open");
-    shootModal.setAttribute("aria-hidden", "true");
-
-    document.body.classList.remove("modal-open");
-}
-
-closeShoot.addEventListener("click", closeShootGame);
-modalBackdrop.addEventListener("click", closeShootGame);
-
-document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && shootModal.classList.contains("open")) {
-        closeShootGame();
+    if (startShoot) {
+      startShoot.focus();
     }
-});
+  }
+
+  playButtons.forEach((button) => {
+    button.addEventListener("click", openShootGame);
+  });
 
 
-// RESET
+  /* CLOSE GAME */
 
-function resetShootGame() {
-    stopShootGame();
+  function closeShootGame() {
+    if (!shootModal) return;
+
+    stopGame();
+
+    shootModal.classList.remove("is-open");
+    shootModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+
+    if (previousFocus && typeof previousFocus.focus === "function") {
+      previousFocus.focus();
+    }
+  }
+
+  if (closeShoot) {
+    closeShoot.addEventListener("click", closeShootGame);
+  }
+
+  if (shootModal) {
+    shootModal.addEventListener("click", (event) => {
+      if (event.target.matches("[data-close-modal]")) {
+        closeShootGame();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      shootModal &&
+      shootModal.classList.contains("is-open")
+    ) {
+      closeShootGame();
+    }
+  });
+
+
+  /* RESET GAME */
+
+  function resetGame() {
+    stopGame();
 
     score = 0;
     streak = 0;
     timeLeft = 30;
-
-    scoreValue.textContent = score;
-    streakValue.textContent = streak;
-    timeValue.textContent = timeLeft;
-    bestValue.textContent = bestScore;
-
-    shootTarget.style.display = "none";
-
-    arenaMessage.classList.remove("hidden");
-
-    arenaMessage.innerHTML = `
-        <span class="arena-message-icon">✳</span>
-        <h3>READY?</h3>
-        <p>Hit the target as many times as you can in 30 seconds.</p>
-    `;
-
-    startShoot.textContent = "START GAME →";
-    startShoot.disabled = false;
-}
-
-
-// STOP
-
-function stopShootGame() {
     gameRunning = false;
 
-    if (gameTimer !== null) {
-        clearInterval(gameTimer);
-        gameTimer = null;
+    if (shootTarget) {
+      shootTarget.hidden = true;
     }
 
-    shootTarget.style.display = "none";
-}
+    if (arenaMessage) {
+      arenaMessage.hidden = false;
+      arenaMessage.innerHTML = `
+        <span class="arena-symbol">✳</span>
+        <strong>READY WHEN YOU ARE?</strong>
+        <span>Press start to begin your 30-second round.</span>
+      `;
+    }
+
+    if (startShoot) {
+      startShoot.disabled = false;
+      startShoot.innerHTML = 'START GAME <span>↗</span>';
+    }
+
+    updateGameStats();
+  }
 
 
-// TARGET POSITION
+  /* START GAME */
 
-function moveTarget() {
-    const arenaRect = shootArena.getBoundingClientRect();
+  function startGame() {
+    if (gameRunning) return;
 
-    const targetWidth = shootTarget.offsetWidth || 43;
-    const targetHeight = shootTarget.offsetHeight || 43;
+    stopGame();
 
-    const padding = 30;
-
-    const maxX = arenaRect.width - targetWidth - padding;
-    const maxY = arenaRect.height - targetHeight - padding;
-
-    const minX = padding;
-    const minY = padding;
-
-    const x = minX + Math.random() * Math.max(0, maxX - minX);
-    const y = minY + Math.random() * Math.max(0, maxY - minY);
-
-    shootTarget.style.left = `${x + targetWidth / 2}px`;
-    shootTarget.style.top = `${y + targetHeight / 2}px`;
-}
-
-
-// START
-
-function startShootGame() {
-    resetShootGame();
-
+    score = 0;
+    streak = 0;
+    timeLeft = 30;
     gameRunning = true;
-    arenaMessage.classList.add("hidden");
 
-    shootTarget.style.display = "flex";
-
-    startShoot.textContent = "GAME RUNNING";
-    startShoot.disabled = true;
-
-    moveTarget();
-
-    gameTimer = setInterval(() => {
-        timeLeft--;
-
-        timeValue.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-            endShootGame();
-        }
-    }, 1000);
-}
-
-startShoot.addEventListener("click", startShootGame);
-
-
-// HIT
-
-shootTarget.addEventListener("click", event => {
-    event.stopPropagation();
-
-    if (!gameRunning) return;
-
-    score++;
-    streak++;
-
-    scoreValue.textContent = score;
-    streakValue.textContent = streak;
-
-    moveTarget();
-});
-
-
-// MISS
-
-shootArena.addEventListener("click", event => {
-    if (!gameRunning) return;
-
-    if (
-        event.target !== shootTarget &&
-        !shootTarget.contains(event.target)
-    ) {
-        streak = 0;
-        streakValue.textContent = streak;
+    if (arenaMessage) {
+      arenaMessage.hidden = true;
     }
-});
+
+    if (shootTarget) {
+      shootTarget.hidden = false;
+    }
+
+    if (startShoot) {
+      startShoot.disabled = true;
+      startShoot.textContent = "GAME IN PROGRESS";
+    }
+
+    updateGameStats();
+    moveTarget();
+
+    gameTimer = window.setInterval(() => {
+      timeLeft -= 1;
+
+      updateGameStats();
+
+      if (timeLeft <= 0) {
+        finishGame();
+      }
+    }, 1000);
+  }
+
+  if (startShoot) {
+    startShoot.addEventListener("click", startGame);
+  }
 
 
-// END
+  /* MOVE TARGET */
 
-function endShootGame() {
-    stopShootGame();
+  function moveTarget() {
+    if (!shootArena || !shootTarget) return;
+
+    const arenaRect = shootArena.getBoundingClientRect();
+    const targetSize = shootTarget.offsetWidth || 45;
+
+    const maxX = Math.max(0, arenaRect.width - targetSize - 16);
+    const maxY = Math.max(0, arenaRect.height - targetSize - 16);
+
+    const randomX = 8 + Math.random() * Math.max(0, maxX - 8);
+    const randomY = 8 + Math.random() * Math.max(0, maxY - 8);
+
+    shootTarget.style.left = `${randomX}px`;
+    shootTarget.style.top = `${randomY}px`;
+  }
+
+
+  /* HIT TARGET */
+
+  if (shootTarget) {
+    shootTarget.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+
+      if (!gameRunning) return;
+
+      score += 1;
+      streak += 1;
+
+      updateGameStats();
+      moveTarget();
+    });
+  }
+
+
+  /* FINISH GAME */
+
+  function finishGame() {
+    stopGame();
+
+    gameRunning = false;
+    timeLeft = 0;
+    streak = 0;
 
     if (score > bestScore) {
-        bestScore = score;
+      bestScore = score;
 
-        localStorage.setItem("kiwamiShootBest", bestScore);
-        bestValue.textContent = bestScore;
+      try {
+        localStorage.setItem(BEST_SCORE_KEY, String(bestScore));
+      } catch (error) {
+        // The game still works if browser storage is unavailable.
+      }
     }
 
-    arenaMessage.classList.remove("hidden");
+    if (shootTarget) {
+      shootTarget.hidden = true;
+    }
 
-    arenaMessage.innerHTML = `
-        <span class="arena-message-icon">✳</span>
-        <h3>TIME'S UP.</h3>
-        <p>
-            You scored <strong>${score}</strong> points.
-            Your best score is <strong>${bestScore}</strong>.
-        </p>
-    `;
+    if (arenaMessage) {
+      arenaMessage.hidden = false;
+      arenaMessage.innerHTML = `
+        <span class="arena-symbol">✦</span>
+        <strong>ROUND COMPLETE</strong>
+        <span>You scored ${score} points. Ready for another round?</span>
+      `;
+    }
 
-    startShoot.disabled = false;
-    startShoot.textContent = "PLAY AGAIN →";
-}
+    if (startShoot) {
+      startShoot.disabled = false;
+      startShoot.innerHTML = 'PLAY AGAIN <span>↗</span>';
+    }
+
+    updateGameStats();
+  }
 
 
-// MOBILE TOUCH SUPPORT
+  /* STOP TIMER */
 
-shootTarget.addEventListener("touchstart", event => {
-    if (gameRunning) event.preventDefault();
-}, { passive: false });
+  function stopGame() {
+    if (gameTimer !== null) {
+      window.clearInterval(gameTimer);
+      gameTimer = null;
+    }
+
+    gameRunning = false;
+  }
+});
