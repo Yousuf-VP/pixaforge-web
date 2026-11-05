@@ -1,768 +1,507 @@
 
-/* ==========================================
-   KIWAMI — MAIN WEBSITE
-   COOKIE EMPEROR — PLAYABLE FIRST BUILD
-========================================== */
+/* =========================================
+   KIWAMI — COMPLETE JAVASCRIPT
+========================================= */
 
-"use strict";
+document.addEventListener("DOMContentLoaded", () => {
+  // ELEMENT SELECTOR HELPERS
+  const $ = (selector, parent = document) => parent.querySelector(selector);
+  const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 
-const $ = (selector, parent = document) => parent.querySelector(selector);
-const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+  // =====================================
+  // 1. PAGE LOADER
+  // =====================================
 
-// ==========================================
-// WEBSITE INITIALIZATION
-// ==========================================
+  const pageLoader = $("#pageLoader");
 
-const loader = $("#pageLoader");
-const header = $("#siteHeader");
-const menuToggle = $("#menuToggle");
-const mainNav = $("#mainNav");
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      pageLoader?.classList.add("loaded");
+    }, 350);
+  });
 
-window.addEventListener("load", () => {
-  setTimeout(() => loader?.classList.add("loaded"), 450);
-});
+  // Fallback in case the load event has already fired.
+  setTimeout(() => {
+    pageLoader?.classList.add("loaded");
+  }, 2500);
 
-$("#year").textContent = new Date().getFullYear();
+  // =====================================
+  // 2. CURRENT YEAR
+  // =====================================
 
-// Decorative stars.
-const stars = $("#stars");
+  const yearElement = $("#year");
 
-if (stars) {
-  for (let i = 0; i < 55; i++) {
-    const star = document.createElement("span");
-
-    star.style.position = "absolute";
-    star.style.left = `${Math.random() * 100}%`;
-    star.style.top = `${Math.random() * 100}%`;
-    star.style.width = `${Math.random() > 0.9 ? 3 : 1}px`;
-    star.style.height = star.style.width;
-    star.style.borderRadius = "50%";
-    star.style.background = "#ffffff";
-    star.style.opacity = `${0.2 + Math.random() * 0.65}`;
-
-    stars.appendChild(star);
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
   }
-}
 
-// Header scroll effect.
-window.addEventListener("scroll", () => {
-  header?.classList.toggle("scrolled", window.scrollY > 25);
-}, { passive: true });
+  // =====================================
+  // 3. STAR BACKGROUND
+  // =====================================
 
-// Mobile navigation.
-menuToggle?.addEventListener("click", () => {
-  const isOpen = mainNav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(isOpen));
-});
+  const starsContainer = $("#stars");
 
-$$(".nav-link, .nav-cta").forEach(link => {
-  link.addEventListener("click", () => {
+  if (starsContainer) {
+    const starCount = window.innerWidth < 600 ? 45 : 85;
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement("span");
+
+      star.className = "star";
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${Math.random() * 4}s`;
+      star.style.opacity = `${0.15 + Math.random() * 0.5}`;
+
+      fragment.appendChild(star);
+    }
+
+    starsContainer.appendChild(fragment);
+  }
+
+  // =====================================
+  // 4. HEADER SCROLL EFFECT
+  // =====================================
+
+  const header = $("#siteHeader");
+
+  function updateHeader() {
+    if (!header) return;
+
+    header.classList.toggle("scrolled", window.scrollY > 35);
+  }
+
+  window.addEventListener("scroll", updateHeader, { passive: true });
+  updateHeader();
+
+  // =====================================
+  // 5. MOBILE NAVIGATION
+  // =====================================
+
+  const menuToggle = $("#menuToggle");
+  const mainNav = $("#mainNav");
+  const navLinks = $$(".nav-link, .nav-cta");
+
+  function closeMenu() {
+    menuToggle?.classList.remove("active");
     mainNav?.classList.remove("open");
     menuToggle?.setAttribute("aria-expanded", "false");
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    const isOpen = mainNav?.classList.toggle("open");
+
+    menuToggle.classList.toggle("active", Boolean(isOpen));
+    menuToggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
   });
-});
 
-// Active navigation section.
-const sections = $$("main section[id]");
-const navLinks = $$(".nav-link");
+  navLinks.forEach(link => {
+    link.addEventListener("click", closeMenu);
+  });
 
-if ("IntersectionObserver" in window) {
-  const sectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+  document.addEventListener("click", event => {
+    if (
+      mainNav?.classList.contains("open") &&
+      !mainNav.contains(event.target) &&
+      !menuToggle?.contains(event.target)
+    ) {
+      closeMenu();
+    }
+  });
 
-      navLinks.forEach(link => {
-        link.classList.toggle(
-          "active",
-          link.getAttribute("href") === `#${entry.target.id}`
-        );
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 760) {
+      closeMenu();
+    }
+  });
+
+  // =====================================
+  // 6. ACTIVE NAVIGATION ON SCROLL
+  // =====================================
+
+  const sections = $$("main section[id]");
+  const pageNavLinks = $$(".nav-link");
+
+  if ("IntersectionObserver" in window) {
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        pageNavLinks.forEach(link => {
+          const matches = link.getAttribute("href") === `#${entry.target.id}`;
+          link.classList.toggle("active", matches);
+        });
       });
+    }, {
+      rootMargin: "-35% 0px -55% 0px",
+      threshold: 0
     });
-  }, {
-    rootMargin: "-35% 0px -55% 0px"
-  });
 
-  sections.forEach(section => sectionObserver.observe(section));
-}
+    sections.forEach(section => sectionObserver.observe(section));
+  }
 
-// Reveal animations.
-if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
+  // =====================================
+  // 7. SCROLL REVEAL
+  // =====================================
+
+  const revealElements = $$(".reveal");
+
+  if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
         entry.target.classList.add("visible");
-        revealObserver.unobserve(entry.target);
-      }
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.12
     });
-  }, {
-    threshold: 0.12
-  });
 
-  $$(".reveal").forEach(element => revealObserver.observe(element));
-} else {
-  $$(".reveal").forEach(element => element.classList.add("visible"));
-}
-
-// ==========================================
-// KIWAMI — INFINITE GAME CAROUSEL
-// ==========================================
-
-const gamesTrack = $("#gamesTrack");
-const carouselWindow = $("#carouselWindow");
-const previousButton = $("#carouselPrev");
-const nextButton = $("#carouselNext");
-
-let carouselAnimation = null;
-
-function initializeInfiniteCarousel() {
-  if (!gamesTrack || gamesTrack.dataset.initialized === "true") {
-    return;
+    revealElements.forEach(element => {
+      revealObserver.observe(element);
+    });
+  } else {
+    revealElements.forEach(element => {
+      element.classList.add("visible");
+    });
   }
 
-  // Collect original cards.
-  const originalCards = [...gamesTrack.children];
+  // =====================================
+  // 8. INFINITE GAME CAROUSEL
+  // =====================================
 
-  if (originalCards.length === 0) return;
+  const gamesTrack = $("#gamesTrack");
+  const carouselWindow = $("#carouselWindow");
+  const carouselPrev = $("#carouselPrev");
+  const carouselNext = $("#carouselNext");
 
-  // Put original cards into one group.
-  const firstGroup = document.createElement("div");
-  firstGroup.className = "games-group";
+  let carouselAnimation = null;
 
-  originalCards.forEach(card => {
-    firstGroup.appendChild(card);
-  });
+  if (gamesTrack && carouselWindow) {
+    const originalGroup = $(".games-group", gamesTrack);
 
-  // Duplicate the group for the seamless loop.
-  const secondGroup = firstGroup.cloneNode(true);
+    if (originalGroup) {
+      // Duplicate the original group to create a seamless loop.
+      const duplicateGroup = originalGroup.cloneNode(true);
+      duplicateGroup.setAttribute("aria-hidden", "true");
 
-  secondGroup.setAttribute("aria-hidden", "true");
+      // Avoid duplicate interactive elements in the accessibility tree.
+      duplicateGroup.querySelectorAll("button, a").forEach(element => {
+        element.setAttribute("tabindex", "-1");
+      });
 
-  // Prevent duplicate interactive controls from receiving keyboard focus.
-  secondGroup.querySelectorAll("button, a, input").forEach(element => {
-    element.setAttribute("tabindex", "-1");
-  });
+      gamesTrack.appendChild(duplicateGroup);
 
-  // Replace the original track contents.
-  gamesTrack.replaceChildren(firstGroup, secondGroup);
+      function getCarouselAnimation() {
+        const animations = gamesTrack.getAnimations();
 
-  gamesTrack.dataset.initialized = "true";
-}
+        carouselAnimation = animations.find(animation => {
+          return animation.effect !== null;
+        }) || null;
 
-// Initialize the carousel.
-initializeInfiniteCarousel();
+        return carouselAnimation;
+      }
 
-// Get the CSS animation.
-function getCarouselAnimation() {
-  if (!gamesTrack) return null;
+      // Wait for the CSS animation to initialize.
+      requestAnimationFrame(() => {
+        getCarouselAnimation();
+      });
 
-  if (!carouselAnimation) {
-    carouselAnimation = gamesTrack.getAnimations()[0] || null;
-  }
+      // Pause when the user hovers over the cards.
+      carouselWindow.addEventListener("mouseenter", () => {
+        gamesTrack.style.animationPlayState = "paused";
+      });
 
-  return carouselAnimation;
-}
+      carouselWindow.addEventListener("mouseleave", () => {
+        gamesTrack.style.animationPlayState = "running";
+      });
 
-// Pause when the user hovers over the carousel.
-carouselWindow?.addEventListener("mouseenter", () => {
-  gamesTrack.style.animationPlayState = "paused";
-});
+      // Pause when keyboard users focus a card.
+      carouselWindow.addEventListener("focusin", () => {
+        gamesTrack.style.animationPlayState = "paused";
+      });
 
-carouselWindow?.addEventListener("mouseleave", () => {
-  gamesTrack.style.animationPlayState = "running";
-});
+      carouselWindow.addEventListener("focusout", event => {
+        if (!carouselWindow.contains(event.relatedTarget)) {
+          gamesTrack.style.animationPlayState = "running";
+        }
+      });
 
-// Pause while the user focuses a carousel control.
-carouselWindow?.addEventListener("focusin", () => {
-  gamesTrack.style.animationPlayState = "paused";
-});
+      // Support touch interaction.
+      carouselWindow.addEventListener("touchstart", () => {
+        gamesTrack.style.animationPlayState = "paused";
+      }, { passive: true });
 
-carouselWindow?.addEventListener("focusout", event => {
-  if (!carouselWindow.contains(event.relatedTarget)) {
-    gamesTrack.style.animationPlayState = "running";
-  }
-});
+      carouselWindow.addEventListener("touchend", () => {
+        gamesTrack.style.animationPlayState = "running";
+      }, { passive: true });
 
-// Pause on mobile touch.
-carouselWindow?.addEventListener("touchstart", () => {
-  gamesTrack.style.animationPlayState = "paused";
-}, { passive: true });
+      function moveCarousel(direction) {
+        const animation = getCarouselAnimation();
 
-carouselWindow?.addEventListener("touchend", () => {
-  gamesTrack.style.animationPlayState = "running";
-}, { passive: true });
+        if (!animation || typeof animation.currentTime !== "number") {
+          return;
+        }
 
-carouselWindow?.addEventListener("touchcancel", () => {
-  gamesTrack.style.animationPlayState = "running";
-}, { passive: true });
+        const duration = animation.effect?.getTiming().duration;
 
-// Arrow controls adjust the carousel animation position.
-function moveCarousel(direction) {
-  const animation = getCarouselAnimation();
+        if (typeof duration !== "number" || !Number.isFinite(duration)) {
+          return;
+        }
 
-  if (!animation || !gamesTrack) return;
+        const currentTime = animation.currentTime;
 
-  const duration = Number(animation.effect?.getTiming().duration) || 32000;
-  const currentTime = Number(animation.currentTime) || 0;
-
-  let nextTime = currentTime + direction * 5000;
-
-  nextTime = ((nextTime % duration) + duration) % duration;
-
-  animation.currentTime = nextTime;
-  gamesTrack.style.animationPlayState = "running";
-}
-
-previousButton?.addEventListener("click", () => moveCarousel(-1));
-nextButton?.addEventListener("click", () => moveCarousel(1));
-
-// ==========================================
-// COOKIE EMPEROR — GAME DATA
-// ==========================================
-
-const GAME_SAVE_KEY = "pixaforge_cookie_emperor_economy_v1";
-
-const BUILDINGS = [
-  {
-    id: "bakery",
-    name: "Small Bakery",
-    description: "Produces fresh cookies.",
-    icon: "⌂",
-    baseCost: 15,
-    production: 0.2
-  },
-  {
-    id: "farm",
-    name: "Cookie Farm",
-    description: "Grows ingredients for production.",
-    icon: "♧",
-    baseCost: 100,
-    production: 1.5
-  },
-  {
-    id: "factory",
-    name: "Cookie Factory",
-    description: "Mass-produces royal cookies.",
-    icon: "⚙",
-    baseCost: 600,
-    production: 8
-  },
-  {
-    id: "castle",
-    name: "Royal Castle",
-    description: "The heart of your cookie empire.",
-    icon: "♜",
-    baseCost: 3500,
-    production: 35
-  },
-  {
-    id: "temple",
-    name: "Cookie Temple",
-    description: "Blesses your kingdom with production.",
-    icon: "♛",
-    baseCost: 18000,
-    production: 150
-  }
-];
-
-const UPGRADES = [
-  {
-    id: "strongHands",
-    name: "Strong Hands",
-    description: "Double cookies earned per click.",
-    icon: "✊",
-    cost: 50,
-    type: "click",
-    multiplier: 2
-  },
-  {
-    id: "goldenOven",
-    name: "Golden Oven",
-    description: "Increase all production by 25%.",
-    icon: "♨",
-    cost: 250,
-    type: "production",
-    multiplier: 1.25
-  },
-  {
-    id: "royalRecipe",
-    name: "Royal Recipe",
-    description: "Double your cookie clicking power.",
-    icon: "✦",
-    cost: 1200,
-    type: "click",
-    multiplier: 2
-  },
-  {
-    id: "emperorBlessing",
-    name: "Emperor's Blessing",
-    description: "Increase all production by 50%.",
-    icon: "♛",
-    cost: 5000,
-    type: "production",
-    multiplier: 1.5
-  }
-];
-
-function createInitialGameState() {
-  return {
-    cookies: 0,
-    totalBaked: 0,
-    clickPower: 1,
-    productionMultiplier: 1,
-    buildings: {},
-    purchasedUpgrades: [],
-    kingdomName: "Cookie Kingdom",
-    lastSaved: Date.now()
-  };
-}
-
-let gameState = createInitialGameState();
-let activeShopTab = "upgrades";
-let toastTimeout = null;
-
-// ==========================================
-// SAVE AND LOAD
-// ==========================================
-
-function loadGame() {
-  try {
-    const saved = localStorage.getItem(GAME_SAVE_KEY);
-
-    if (!saved) return;
-
-    const parsed = JSON.parse(saved);
-
-    if (!parsed || typeof parsed !== "object") return;
-
-    const initial = createInitialGameState();
-
-    gameState = {
-      ...initial,
-      ...parsed,
-      buildings: {
-        ...initial.buildings,
-        ...(parsed.buildings || {})
-      },
-      purchasedUpgrades: Array.isArray(parsed.purchasedUpgrades)
-        ? parsed.purchasedUpgrades
-        : []
-    };
-
-    gameState.cookies = Math.max(0, Number(gameState.cookies) || 0);
-    gameState.totalBaked = Math.max(0, Number(gameState.totalBaked) || 0);
-    gameState.clickPower = Math.max(1, Number(gameState.clickPower) || 1);
-
-    gameState.productionMultiplier = Math.max(
-      1,
-      Number(gameState.productionMultiplier) || 1
-    );
-
-    // Offline production: up to 8 hours at 50% production.
-    const elapsedSeconds = Math.max(
-      0,
-      (Date.now() - Number(gameState.lastSaved || Date.now())) / 1000
-    );
-
-    const offlineSeconds = Math.min(elapsedSeconds, 8 * 60 * 60);
-    const offlineCookies = offlineSeconds * getCookiesPerSecond() * 0.5;
-
-    if (offlineCookies > 0) {
-      gameState.cookies += offlineCookies;
-      gameState.totalBaked += offlineCookies;
-
-      setTimeout(() => {
-        showToast(
-          `Welcome back! +${formatNumber(offlineCookies)} offline cookies`
+        animation.currentTime = Math.max(
+          0,
+          Math.min(duration, currentTime + direction * 900)
         );
-      }, 500);
+      }
+
+      carouselPrev?.addEventListener("click", () => {
+        moveCarousel(-1);
+      });
+
+      carouselNext?.addEventListener("click", () => {
+        moveCarousel(1);
+      });
     }
-  } catch (error) {
-    console.warn("Could not load Cookie Emperor save:", error);
-    gameState = createInitialGameState();
   }
-}
 
-function saveGame(showMessage = false) {
-  try {
-    gameState.lastSaved = Date.now();
+  // =====================================
+  // 9. SHOOT-STREAK GAME
+  // =====================================
 
-    localStorage.setItem(
-      GAME_SAVE_KEY,
-      JSON.stringify(gameState)
+  const shootGame = $("#shootGame");
+  const shootArena = $("#shootArena");
+  const shootTarget = $("#shootTarget");
+  const startShootGame = $("#startShootGame");
+  const closeShootGame = $("#closeShootGame");
+  const arenaMessage = $("#arenaMessage");
+
+  const scoreDisplay = $("#shootScore");
+  const timeDisplay = $("#shootTime");
+  const streakDisplay = $("#shootStreak");
+  const bestDisplay = $("#shootBest");
+
+  const BEST_SCORE_KEY = "kiwami_shoot_streak_best_v1";
+
+  let score = 0;
+  let streak = 0;
+  let timeLeft = 30;
+  let gameRunning = false;
+  let gameTimer = null;
+
+  let bestScore = Number(localStorage.getItem(BEST_SCORE_KEY)) || 0;
+
+  if (bestDisplay) {
+    bestDisplay.textContent = bestScore;
+  }
+
+  function updateGameHUD() {
+    if (scoreDisplay) scoreDisplay.textContent = score;
+    if (timeDisplay) timeDisplay.textContent = timeLeft;
+    if (streakDisplay) streakDisplay.textContent = streak;
+    if (bestDisplay) bestDisplay.textContent = bestScore;
+  }
+
+  function positionTarget() {
+    if (!shootArena || !shootTarget) return;
+
+    const arenaWidth = shootArena.clientWidth;
+    const arenaHeight = shootArena.clientHeight;
+    const targetSize = shootTarget.offsetWidth || 54;
+    const padding = targetSize / 2 + 8;
+
+    const availableWidth = Math.max(
+      0,
+      arenaWidth - padding * 2
     );
 
-    const status = $("#saveStatus");
+    const availableHeight = Math.max(
+      0,
+      arenaHeight - padding * 2
+    );
 
-    if (status) {
-      status.textContent = "GAME SAVED";
-    }
+    const x = padding + Math.random() * availableWidth;
+    const y = padding + Math.random() * availableHeight;
 
-    if (showMessage) {
-      showToast("Kingdom saved successfully.");
-    }
-  } catch (error) {
-    console.error("Could not save Cookie Emperor:", error);
-    showToast("Save failed. Check your browser storage.");
-  }
-}
-
-// ==========================================
-// GAME CALCULATIONS
-// ==========================================
-
-function getBuildingCount(id) {
-  return Math.max(0, Number(gameState.buildings[id]) || 0);
-}
-
-function getBuildingCost(building) {
-  const owned = getBuildingCount(building.id);
-
-  return Math.ceil(
-    building.baseCost * Math.pow(1.15, owned)
-  );
-}
-
-function getTotalBuildings() {
-  return BUILDINGS.reduce((total, building) => {
-    return total + getBuildingCount(building.id);
-  }, 0);
-}
-
-function getCookiesPerSecond() {
-  const baseProduction = BUILDINGS.reduce((total, building) => {
-    return total + getBuildingCount(building.id) * building.production;
-  }, 0);
-
-  return baseProduction * gameState.productionMultiplier;
-}
-
-function formatNumber(number) {
-  if (!Number.isFinite(number)) return "0";
-
-  if (number < 1000) {
-    return number.toLocaleString("en-IN", {
-      maximumFractionDigits: number < 10 ? 1 : 0
-    });
+    shootTarget.style.left = `${x}px`;
+    shootTarget.style.top = `${y}px`;
   }
 
-  const units = [
-    { value: 1e12, suffix: "T" },
-    { value: 1e9, suffix: "B" },
-    { value: 1e6, suffix: "M" },
-    { value: 1e3, suffix: "K" }
-  ];
+  function showGameMessage(title, description, buttonText) {
+    if (!arenaMessage) return;
 
-  for (const unit of units) {
-    if (number >= unit.value) {
-      return `${(number / unit.value).toFixed(2)}${unit.suffix}`;
-    }
+    arenaMessage.innerHTML = `
+      <div class="arena-crosshair">+</div>
+      <h3>${title}</h3>
+      <p>${description}</p>
+      <button class="button button-primary" id="restartShootGame">
+        ${buttonText}
+      </button>
+    `;
+
+    arenaMessage.style.display = "flex";
+
+    $("#restartShootGame")?.addEventListener("click", startGame);
   }
 
-  return Math.floor(number).toString();
-}
+  function finishGame() {
+    gameRunning = false;
 
-// ==========================================
-// GAME RENDERING
-// ==========================================
+    clearInterval(gameTimer);
+    gameTimer = null;
 
-function renderGame() {
-  const cps = getCookiesPerSecond();
+    if (shootTarget) {
+      shootTarget.hidden = true;
+    }
 
-  $("#cookieCount").textContent = formatNumber(gameState.cookies);
-  $("#totalBaked").textContent = formatNumber(gameState.totalBaked);
-  $("#perClick").textContent = formatNumber(gameState.clickPower);
-  $("#cps").textContent = formatNumber(cps);
-  $("#sideCps").textContent = formatNumber(cps);
-  $("#buildingCount").textContent = formatNumber(getTotalBuildings());
+    if (score > bestScore) {
+      bestScore = score;
+      localStorage.setItem(BEST_SCORE_KEY, String(bestScore));
+    }
 
-  $("#kingdomName").value = gameState.kingdomName;
-  $("#kingdomHeading").textContent = gameState.kingdomName;
+    updateGameHUD();
 
-  renderShop();
-}
+    showGameMessage(
+      "TIME'S UP!",
+      `You scored ${score} points with a best streak of ${streak}.`,
+      "PLAY AGAIN"
+    );
+  }
 
-function renderShop() {
-  const shopList = $("#shopList");
+  function startGame() {
+    if (!shootGame || !shootArena) return;
 
-  if (!shopList) return;
+    clearInterval(gameTimer);
 
-  shopList.replaceChildren();
+    score = 0;
+    streak = 0;
+    timeLeft = 30;
+    gameRunning = true;
 
-  const items = activeShopTab === "buildings"
-    ? BUILDINGS
-    : UPGRADES;
+    updateGameHUD();
 
-  items.forEach(item => {
-    const isBuilding = activeShopTab === "buildings";
+    if (arenaMessage) {
+      arenaMessage.style.display = "none";
+    }
 
-    const owned = isBuilding
-      ? getBuildingCount(item.id)
-      : 0;
+    if (shootTarget) {
+      shootTarget.hidden = false;
+    }
 
-    const purchased = gameState.purchasedUpgrades.includes(item.id);
+    positionTarget();
 
-    const cost = isBuilding
-      ? getBuildingCost(item)
-      : item.cost;
+    gameTimer = setInterval(() => {
+      timeLeft -= 1;
+      updateGameHUD();
 
-    const unavailable = gameState.cookies < cost || purchased;
-
-    const button = document.createElement("button");
-    button.className = "shop-item";
-    button.disabled = unavailable;
-
-    const icon = document.createElement("span");
-    icon.className = "shop-item-icon";
-    icon.textContent = item.icon;
-
-    const info = document.createElement("span");
-    info.className = "shop-item-info";
-
-    const name = document.createElement("strong");
-    name.textContent = item.name;
-
-    const description = document.createElement("small");
-
-    description.textContent = isBuilding
-      ? `${item.description} Owned: ${owned}`
-      : purchased
-        ? "Already purchased"
-        : item.description;
-
-    info.append(name, description);
-
-    const price = document.createElement("span");
-    price.className = "shop-item-cost";
-
-    price.textContent = purchased
-      ? "OWNED"
-      : `${formatNumber(cost)} cookies`;
-
-    button.append(icon, info, price);
-
-    button.addEventListener("click", () => {
-      if (isBuilding) {
-        buyBuilding(item.id);
-      } else {
-        buyUpgrade(item.id);
+      if (timeLeft <= 0) {
+        finishGame();
       }
-    });
+    }, 1000);
+  }
 
-    shopList.appendChild(button);
+  function openGame() {
+    if (!shootGame) return;
+
+    shootGame.classList.add("open");
+    shootGame.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+
+    clearInterval(gameTimer);
+    gameRunning = false;
+
+    score = 0;
+    streak = 0;
+    timeLeft = 30;
+
+    updateGameHUD();
+
+    if (shootTarget) {
+      shootTarget.hidden = true;
+    }
+
+    showGameMessage(
+      "READY?",
+      "Hit as many targets as you can in 30 seconds.",
+      "START GAME"
+    );
+  }
+
+  function closeGame() {
+    if (!shootGame) return;
+
+    shootGame.classList.remove("open");
+    shootGame.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+
+    clearInterval(gameTimer);
+    gameTimer = null;
+    gameRunning = false;
+
+    if (shootTarget) {
+      shootTarget.hidden = true;
+    }
+  }
+
+  // Open the playable game from its game card.
+  $$(".play-game").forEach(button => {
+    button.addEventListener("click", openGame);
   });
-}
 
-// ==========================================
-// GAME ACTIONS
-// ==========================================
+  startShootGame?.addEventListener("click", startGame);
 
-function bakeCookie() {
-  gameState.cookies += gameState.clickPower;
-  gameState.totalBaked += gameState.clickPower;
+  closeShootGame?.addEventListener("click", closeGame);
 
-  updateGameNumbers();
-}
-
-function updateGameNumbers() {
-  const cps = getCookiesPerSecond();
-
-  $("#cookieCount").textContent = formatNumber(gameState.cookies);
-  $("#totalBaked").textContent = formatNumber(gameState.totalBaked);
-  $("#cps").textContent = formatNumber(cps);
-  $("#sideCps").textContent = formatNumber(cps);
-  $("#perClick").textContent = formatNumber(gameState.clickPower);
-  $("#buildingCount").textContent = formatNumber(getTotalBuildings());
-
-  renderShop();
-}
-
-function buyBuilding(id) {
-  const building = BUILDINGS.find(item => item.id === id);
-
-  if (!building) return;
-
-  const cost = getBuildingCost(building);
-
-  if (gameState.cookies < cost) {
-    showToast("Not enough cookies!");
-    return;
-  }
-
-  gameState.cookies -= cost;
-
-  gameState.buildings[id] =
-    getBuildingCount(id) + 1;
-
-  updateGameNumbers();
-  saveGame();
-
-  showToast(`${building.name} added to your kingdom!`);
-}
-
-function buyUpgrade(id) {
-  const upgrade = UPGRADES.find(item => item.id === id);
-
-  if (!upgrade) return;
-
-  if (gameState.purchasedUpgrades.includes(id)) return;
-
-  if (gameState.cookies < upgrade.cost) {
-    showToast("Not enough cookies!");
-    return;
-  }
-
-  gameState.cookies -= upgrade.cost;
-  gameState.purchasedUpgrades.push(id);
-
-  if (upgrade.type === "click") {
-    gameState.clickPower *= upgrade.multiplier;
-  }
-
-  if (upgrade.type === "production") {
-    gameState.productionMultiplier *= upgrade.multiplier;
-  }
-
-  updateGameNumbers();
-  saveGame();
-
-  showToast(`${upgrade.name} unlocked!`);
-}
-
-// ==========================================
-// GAME UI EVENTS
-// ==========================================
-
-const gameOverlay = $("#cookieGame");
-
-function openCookieEmperor() {
-  gameOverlay.classList.add("open");
-  gameOverlay.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-
-  renderGame();
-  saveGame();
-}
-
-function closeCookieEmperor() {
-  gameOverlay.classList.remove("open");
-  gameOverlay.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-
-  saveGame();
-}
-
-// Launch game from original game card.
-$$("[data-launch='cookie']").forEach(button => {
-  button.addEventListener("click", openCookieEmperor);
-});
-
-$("#closeGame")?.addEventListener("click", closeCookieEmperor);
-
-$("#saveGame")?.addEventListener("click", () => {
-  saveGame(true);
-});
-
-$("#bakeCookie")?.addEventListener("click", bakeCookie);
-
-// Kingdom naming.
-$("#kingdomName")?.addEventListener("input", event => {
-  const value = event.target.value.trim().slice(0, 22);
-
-  gameState.kingdomName = value || "Cookie Kingdom";
-
-  $("#kingdomHeading").textContent = gameState.kingdomName;
-
-  saveGame();
-});
-
-// Shop tabs.
-$$(".shop-tab").forEach(button => {
-  button.addEventListener("click", () => {
-    activeShopTab = button.dataset.tab;
-
-    $$(".shop-tab").forEach(tab => {
-      tab.classList.toggle("active", tab === button);
-    });
-
-    renderShop();
+  // Close when the backdrop is clicked.
+  $$("[data-close-game]").forEach(element => {
+    element.addEventListener("click", closeGame);
   });
+
+  // Close with Escape.
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && shootGame?.classList.contains("open")) {
+      closeGame();
+    }
+  });
+
+  // Score when the target is hit.
+  shootTarget?.addEventListener("click", event => {
+    event.stopPropagation();
+
+    if (!gameRunning) return;
+
+    score += 10;
+    streak += 1;
+
+    updateGameHUD();
+    positionTarget();
+  });
+
+  // A miss resets the streak.
+  shootArena?.addEventListener("click", event => {
+    if (!gameRunning) return;
+
+    if (event.target === shootArena) {
+      streak = 0;
+      updateGameHUD();
+    }
+  });
+
+  // Keep the target inside the arena when the window changes size.
+  window.addEventListener("resize", () => {
+    if (gameRunning) {
+      positionTarget();
+    }
+  });
+
+  // =====================================
+  // 10. INITIAL STATE
+  // =====================================
+
+  updateHeader();
+  updateGameHUD();
 });
-
-// Escape key closes game.
-document.addEventListener("keydown", event => {
-  if (
-    event.key === "Escape" &&
-    gameOverlay.classList.contains("open")
-  ) {
-    closeCookieEmperor();
-  }
-});
-
-// ==========================================
-// GAME PRODUCTION
-// ==========================================
-
-function gameTick() {
-  const production = getCookiesPerSecond();
-
-  if (production <= 0) return;
-
-  gameState.cookies += production;
-  gameState.totalBaked += production;
-
-  $("#cookieCount").textContent = formatNumber(gameState.cookies);
-  $("#totalBaked").textContent = formatNumber(gameState.totalBaked);
-
-  // Update shop affordability as the player earns cookies.
-  if (Math.floor(gameState.cookies) % 5 === 0) {
-    renderShop();
-  }
-}
-
-setInterval(gameTick, 1000);
-
-// Automatic save every 10 seconds.
-setInterval(() => {
-  saveGame();
-}, 10000);
-
-// Save when leaving or hiding the page.
-window.addEventListener("pagehide", () => {
-  saveGame();
-});
-
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") {
-    saveGame();
-  }
-});
-
-// ==========================================
-// GAME NOTIFICATIONS
-// ==========================================
-
-function showToast(message) {
-  const toast = $("#gameToast");
-
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(toastTimeout);
-
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
-}
-
-// ==========================================
-// START COOKIE EMPEROR
-// ==========================================
-
-loadGame();
-renderGame();
-
-console.log("KIWAMI initialized.");
-console.log("Infinite game carousel initialized.");
-console.log("COOKIE EMPEROR initialized.");
