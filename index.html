@@ -2,276 +2,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#070510">
-  <meta name="description" content="KIWAMI — Extreme gaming experiences forged for the experience. Discover browser games, experiments and interactive worlds.">
-  <title>KIWAMI — Extreme Gaming Experiences</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080611">
+    <meta name="description" content="KIWAMI — Extreme gaming experiences forged for players. Explore games, experiments and interactive worlds.">
+    <title>KIWAMI — Extreme Gaming Experiences</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-  <div class="noise"></div>
-  <div class="page-loader" id="pageLoader"><span class="loader-mark">K</span><span>INITIALIZING KIWAMI</span></div>
 
-  <header class="site-header" id="siteHeader">
-    <a class="brand" href="#home" aria-label="KIWAMI home">
-      <span class="brand-mark">K</span>
-      <span>KIWAMI<span class="brand-dot">.</span></span>
-    </a>
-
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-
-    <nav class="main-nav" id="mainNav">
-      <a href="#home" class="active">Home</a>
-      <a href="#games">Games</a>
-      <a href="#features">Features</a>
-      <a href="#studio">Studio</a>
-      <a href="#founder">Founder</a>
-    </nav>
-    <a href="#games" class="header-cta">EXPLORE GAMES <span>↗</span></a>
-  </header>
-
-  <main>
-    <section class="hero section" id="home">
-      <div class="hero-grid"></div>
-      <div class="hero-content reveal">
-        <div class="eyebrow"><span class="status-dot"></span> INDEPENDENT DIGITAL GAME STUDIO</div>
-        <h1>FORGE YOUR<br><span class="gradient-text">EXPERIENCE.</span></h1>
-        <p class="hero-description">We build interactive worlds, browser games and digital experiences that push beyond the ordinary.</p>
-        <div class="hero-actions">
-          <a href="#games" class="button button-primary">EXPLORE GAMES <span>↗</span></a>
-          <a href="#studio" class="button button-glass">DISCOVER KIWAMI</a>
-        </div>
-        <div class="hero-stats">
-          <div><strong>03</strong><span>GAME CONCEPTS</span></div>
-          <div><strong>01</strong><span>PLAYABLE BUILD</span></div>
-          <div><strong>∞</strong><span>IDEAS TO FORGE</span></div>
-        </div>
-      </div>
-      <div class="hero-visual reveal">
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="hero-core">
-          <div class="core-inner">K<span>W</span></div>
-          <div class="core-caption">BEYOND THE ORDINARY</div>
-        </div>
-        <div class="floating-chip chip-top">SYSTEM ONLINE <span>●</span></div>
-        <div class="floating-chip chip-bottom">CREATIVE MODE <span>✦</span></div>
-        <div class="hero-crosshair">+</div>
-      </div>
-      <div class="hero-bottom"><span>SCROLL TO EXPLORE</span><span class="scroll-line"></span><span>01 / 05</span></div>
-    </section>
-
-    <section class="games-section section" id="games">
-      <div class="section-heading reveal">
-        <div>
-          <div class="eyebrow">THE ARCADE / 001</div>
-          <h2>ENTER THE <span class="gradient-text">GAMEVERSE.</span></h2>
-          <p>Experiences in progress. Worlds waiting to be explored.</p>
-        </div>
-        <div class="carousel-controls">
-          <button id="carouselPrev" aria-label="Move carousel left">←</button>
-          <button id="carouselNext" aria-label="Move carousel right">→</button>
-        </div>
-      </div>
-
-      <div class="carousel-shell reveal">
-        <div class="carousel-window" id="carouselWindow">
-          <div class="games-track" id="gamesTrack">
-            <div class="games-group">
-              <article class="game-card game-shoot">
-                <div class="game-art shoot-art">
-                  <div class="art-grid"></div><div class="target target-one"></div>
-                  <div class="target target-two"></div><div class="target target-three"></div>
-                  <div class="crosshair-art">+</div><span class="art-label">ARCADE // 001</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status playable">● PLAYABLE</span><span>ARCADE / ACTION</span></div>
-                  <h3>SHOOT-STREAK</h3>
-                  <p>Test your focus. Hit the targets. Build your streak before time runs out.</p>
-                  <button class="text-link play-game" data-game="shoot">PLAY NOW <span>↗</span></button>
-                </div>
-              </article>
-
-              <article class="game-card game-dodge">
-                <div class="game-art dodge-art">
-                  <div class="dodge-grid"></div><div class="dodge-player"></div>
-                  <div class="dodge-obstacle obstacle-one"></div><div class="dodge-obstacle obstacle-two"></div>
-                  <span class="art-label">SURVIVAL // 002</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status development">IN DEVELOPMENT</span><span>ARCADE / SURVIVAL</span></div>
-                  <h3>DODGE-EM-ALL</h3>
-                  <p>Read the pattern, move fast and survive the incoming obstacles.</p>
-                  <span class="text-link muted-link">COMING SOON <span>↗</span></span>
-                </div>
-              </article>
-
-              <article class="game-card game-void">
-                <div class="game-art void-art">
-                  <div class="void-sun"></div><div class="void-ring"></div>
-                  <div class="void-particle particle-one"></div><div class="void-particle particle-two"></div>
-                  <span class="art-label">EXPLORATION // 003</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status planned">PLANNED</span><span>ENDLESS / RUNNER</span></div>
-                  <h3>VOID RUNNER</h3>
-                  <p>Race through a shifting neon dimension where every run is different.</p>
-                  <span class="text-link muted-link">IN THE WORKS <span>↗</span></span>
-                </div>
-              </article>
-            </div>
-
-            <div class="games-group" aria-hidden="true">
-              <article class="game-card game-shoot">
-                <div class="game-art shoot-art">
-                  <div class="art-grid"></div><div class="target target-one"></div>
-                  <div class="target target-two"></div><div class="target target-three"></div>
-                  <div class="crosshair-art">+</div><span class="art-label">ARCADE // 001</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status playable">● PLAYABLE</span><span>ARCADE / ACTION</span></div>
-                  <h3>SHOOT-STREAK</h3>
-                  <p>Test your focus. Hit the targets. Build your streak before time runs out.</p>
-                  <span class="text-link">PLAY NOW <span>↗</span></span>
-                </div>
-              </article>
-
-              <article class="game-card game-dodge">
-                <div class="game-art dodge-art">
-                  <div class="dodge-grid"></div><div class="dodge-player"></div>
-                  <div class="dodge-obstacle obstacle-one"></div><div class="dodge-obstacle obstacle-two"></div>
-                  <span class="art-label">SURVIVAL // 002</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status development">IN DEVELOPMENT</span><span>ARCADE / SURVIVAL</span></div>
-                  <h3>DODGE-EM-ALL</h3>
-                  <p>Read the pattern, move fast and survive the incoming obstacles.</p>
-                  <span class="text-link muted-link">COMING SOON <span>↗</span></span>
-                </div>
-              </article>
-
-              <article class="game-card game-void">
-                <div class="game-art void-art">
-                  <div class="void-sun"></div><div class="void-ring"></div>
-                  <div class="void-particle particle-one"></div><div class="void-particle particle-two"></div>
-                  <span class="art-label">EXPLORATION // 003</span>
-                </div>
-                <div class="game-info">
-                  <div class="game-meta"><span class="game-status planned">PLANNED</span><span>ENDLESS / RUNNER</span></div>
-                  <h3>VOID RUNNER</h3>
-                  <p>Race through a shifting neon dimension where every run is different.</p>
-                  <span class="text-link muted-link">IN THE WORKS <span>↗</span></span>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-bottom"><span>KIWAMI GAME COLLECTION</span><span class="carousel-line"></span><span>INFINITE LOOP</span></div>
-      </div>
-    </section>
-
-    <section class="features-section section" id="features">
-      <div class="section-heading reveal">
-        <div><div class="eyebrow">WHAT WE BUILD / 002</div><h2>BUILT TO <span class="gradient-text">GO BEYOND.</span></h2></div>
-      </div>
-      <div class="feature-grid">
-        <article class="feature-card glass-card reveal"><span class="feature-number">01</span><div class="feature-icon">✧</div><h3>Distinctive Worlds</h3><p>Original concepts, visual identities and interactive environments designed to feel different.</p><span class="feature-foot">DESIGN / EXPERIENCE</span></article>
-        <article class="feature-card glass-card reveal"><span class="feature-number">02</span><div class="feature-icon">⌘</div><h3>Browser Experiences</h3><p>Responsive, interactive projects built with modern web technologies and thoughtful design.</p><span class="feature-foot">WEB / INTERACTION</span></article>
-        <article class="feature-card glass-card reveal"><span class="feature-number">03</span><div class="feature-icon">⚡</div><h3>Game Development</h3><p>Small playable experiments growing into complete game experiences, one system at a time.</p><span class="feature-foot">GAMES / SYSTEMS</span></article>
-      </div>
-    </section>
-
-    <section class="studio-section section" id="studio">
-      <div class="studio-layout">
-        <div class="studio-copy reveal">
-          <div class="eyebrow">THE STUDIO / 003</div>
-          <h2>SMALL STUDIO.<br><span class="gradient-text">BIG AMBITION.</span></h2>
-          <p class="studio-lead">KIWAMI is an independent digital creation project focused on building memorable browser games and modern web experiences.</p>
-          <p>Every project is an opportunity to experiment, learn and improve. From the first interface to the final interaction, the goal is to create work that feels intentional, polished and fun to use.</p>
-          <a href="#founder" class="button button-glass">MEET THE FOUNDER <span>↗</span></a>
-        </div>
-        <div class="studio-panel glass-card reveal">
-          <div class="panel-top"><span>KIWAMI / CORE VALUES</span><span class="panel-live">● ACTIVE</span></div>
-          <div class="value-row"><span>01</span><div><strong>Experimentation</strong><small>Try ideas. Learn by building.</small></div><b>↗</b></div>
-          <div class="value-row"><span>02</span><div><strong>Craftsmanship</strong><small>Care about the details.</small></div><b>↗</b></div>
-          <div class="value-row"><span>03</span><div><strong>Innovation</strong><small>Explore new ways to create.</small></div><b>↗</b></div>
-          <div class="value-row"><span>04</span><div><strong>Consistency</strong><small>Improve with every release.</small></div><b>↗</b></div>
-          <div class="panel-bottom">FORGED FOR THE EXPERIENCE.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="founder-section section" id="founder">
-      <div class="founder-heading reveal"><div class="eyebrow">BEHIND KIWAMI / 004</div><h2>THE PERSON<br>BEHIND THE <span class="gradient-text">PIXELS.</span></h2></div>
-      <div class="founder-card glass-card reveal">
-        <div class="founder-identity">
-          <div class="founder-avatar"><span>YV</span><i></i></div>
-          <div class="founder-label">FOUNDER PROFILE / 001</div>
-          <h3>Yousuf VP</h3>
-          <p class="founder-role">FOUNDER & DEVELOPER</p>
-          <div class="founder-divider"></div>
-          <p class="founder-bio">A young developer exploring the intersection of web technology, game development, creative design and automation.</p>
-          <div class="founder-location">INDEPENDENT CREATOR <span>•</span> KIWAMI</div>
-        </div>
-        <div class="founder-details">
-          <div class="detail-block"><span class="detail-label">01 / ABOUT</span><h4>Building ideas into experiences.</h4><p>KIWAMI is a space to turn creative concepts into real projects. The focus is on learning through development and creating polished experiences that people can interact with.</p></div>
-          <div class="detail-block"><span class="detail-label">02 / DEVELOPER SKILLS</span>
-            <div class="skills-list">
-              <span>HTML & CSS</span><span>JavaScript</span><span>Web Development</span><span>Game Development</span><span>UI / UX Design</span><span>AI Automation</span><span>Creative Problem Solving</span>
-            </div>
-          </div>
-          <div class="detail-block"><span class="detail-label">03 / CURRENT FOCUS</span><div class="focus-grid"><div><strong>01</strong><span>Browser Games</span></div><div><strong>02</strong><span>Interactive Web</span></div><div><strong>03</strong><span>AI Automation</span></div><div><strong>04</strong><span>Creative Coding</span></div></div></div>
-          <blockquote>“Don't just imagine what you can build. Start building it.”</blockquote>
-        </div>
-      </div>
-    </section>
-
-    <section class="final-cta section reveal">
-      <div class="cta-orb"></div>
-      <div class="eyebrow">YOUR NEXT EXPERIENCE STARTS HERE</div>
-      <h2>READY TO ENTER<br><span class="gradient-text">THE GAMEVERSE?</span></h2>
-      <p>Explore the collection. Discover what we're building.</p>
-      <a href="#games" class="button button-primary">EXPLORE KIWAMI <span>↗</span></a>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-main">
-      <div class="footer-brand-column">
-        <a class="brand footer-brand" href="#home"><span class="brand-mark">K</span><span>KIWAMI<span class="brand-dot">.</span></span></a>
-        <p>Forging interactive worlds, browser games and digital experiences beyond the ordinary.</p>
-        <span class="footer-tagline">FORGED FOR THE EXPERIENCE.</span>
-      </div>
-      <div class="footer-column"><h4>EXPLORE</h4><a href="#home">Home</a><a href="#games">Games</a><a href="#features">Features</a><a href="#studio">Studio</a></div>
-      <div class="footer-column"><h4>THE COLLECTION</h4><a href="#games">Shoot-Streak <small>PLAYABLE</small></a><a href="#games">Dodge-Em-All</a><a href="#games">Void Runner</a></div>
-      <div class="footer-column"><h4>THE CREATOR</h4><a href="#founder">Founder Profile</a><a href="#founder">Developer Skills</a><a href="#founder">Current Focus</a></div>
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-mark">K<span>.</span></div>
+        <div class="loader-line"></div>
+        <p>ENTERING KIWAMI</p>
     </div>
-    <div class="footer-founder">
-      <div class="footer-founder-mark">YV</div><div><strong>Yousuf VP</strong><span>FOUNDER & DEVELOPER</span></div>
-      <a href="#founder">VIEW PROFILE ↗</a>
+
+    <div class="space-background">
+        <div class="space-glow glow-one"></div>
+        <div class="space-glow glow-two"></div>
+        <div class="space-grid"></div>
+        <div class="stars" id="stars"></div>
     </div>
-    <div class="footer-bottom"><span>© <span id="year"></span> KIWAMI. ALL RIGHTS RESERVED.</span><span>DESIGNED & BUILT WITH INTENTION.</span><a href="#home">BACK TO TOP ↑</a></div>
-  </footer>
 
-  <!-- SHOOT-STREAK GAME -->
-  <div class="game-modal" id="shootModal" aria-hidden="true">
-    <div class="game-modal-backdrop" data-close-game></div>
-    <section class="game-box" role="dialog" aria-modal="true" aria-labelledby="shootTitle">
-      <div class="game-box-header"><div><span class="eyebrow">KIWAMI ARCADE / 001</span><h2 id="shootTitle">SHOOT-STREAK</h2></div><button class="close-game" id="closeShoot" aria-label="Close game">×</button></div>
-      <div class="game-hud"><div><span>SCORE</span><strong id="shootScore">0</strong></div><div><span>TIME</span><strong id="shootTime">30</strong></div><div><span>STREAK</span><strong id="shootStreak">0</strong></div><div><span>BEST</span><strong id="shootBest">0</strong></div></div>
-      <div class="shoot-arena" id="shootArena"><div class="arena-message" id="arenaMessage"><h3>READY?</h3><p>Hit as many targets as you can in 30 seconds.</p><button class="button button-primary" id="startShoot">START GAME</button></div><button class="shoot-target" id="shootTarget" aria-label="Hit target"></button></div>
-      <div class="game-box-footer"><span>CLICK OR TAP THE TARGET</span><span>30 SECOND CHALLENGE</span></div>
-    </section>
-  </div>
+    <header class="site-header" id="siteHeader">
+        <a class="brand" href="#home" aria-label="KIWAMI home">
+            KIWAMI<span>.</span>
+        </a>
 
-  <script src="script.js"></script>
+        <nav class="main-nav" id="mainNav">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#games" class="nav-link">Games</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#studio" class="nav-link">Studio</a>
+        </nav>
+
+        <a href="#games" class="nav-cta">EXPLORE <span>↗</span></a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span>
+        </button>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero section" id="home">
+            <div class="hero-content reveal">
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    INDEPENDENT GAME DEVELOPMENT
+                </div>
+
+                <h1>
+                    BEYOND<br>
+                    <span class="gradient-text">ORDINARY.</span>
+                </h1>
+
+                <p class="hero-description">
+                    We forge interactive experiences that push boundaries.
+                    Enter a world where imagination meets gameplay.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#games" class="button button-primary">EXPLORE GAMES <span>↗</span></a>
+                    <a href="#studio" class="button button-ghost">DISCOVER KIWAMI</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div><strong>01</strong><span>PLAYABLE GAME</span></div>
+                    <div><strong>03</strong><span>GAME PROJECTS</span></div>
+                    <div><strong>∞</strong><span>POSSIBILITIES</span></div>
+                </div>
+            </div>
+
+            <div class="hero-art reveal">
+                <div class="hero-orbit orbit-a"></div>
+                <div class="hero-orbit orbit-b"></div>
+                <div class="hero-core">
+                    <div class="core-ring"></div>
+                    <div class="core-letter">K</div>
+                    <div class="core-light"></div>
+                </div>
+                <div class="floating-label label-top">SYSTEM ONLINE</div>
+                <div class="floating-label label-bottom">KIWAMI // 001</div>
+                <div class="hero-scan"></div>
+            </div>
+
+            <div class="scroll-indicator">
+                <span></span> SCROLL TO EXPLORE
+            </div>
+        </section>
+
+        <!-- GAMES -->
+        <section class="games-section section" id="games">
+            <div class="section-heading reveal">
+                <div>
+                    <div class="eyebrow">THE COLLECTION / 001</div>
+                    <h2>ENTER THE <span class="gradient-text">GAMEVERSE.</span></h2>
+                </div>
+                <p>Different worlds. Different challenges.<br>One destination.</p>
+            </div>
+
+            <div class="carousel-shell reveal">
+                <div class="carousel-window" id="carouselWindow">
+                    <div class="games-track" id="gamesTrack">
+
+                        <div class="games-group">
+                            <article class="game-card game-shoot">
+                                <div class="game-art">
+                                    <div class="art-grid"></div>
+                                    <div class="target-art">
+                                        <span></span>
+                                    </div>
+                                    <div class="art-orb"></div>
+                                    <div class="art-code">01 / AIM</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta"><span class="playable-dot"></span> PLAYABLE</div>
+                                    <h3>SHOOT-STREAK</h3>
+                                    <p>Test your precision. Build your streak. Beat your best score.</p>
+                                    <button class="game-button play-game" data-game="shoot">PLAY NOW <span>↗</span></button>
+                                </div>
+                            </article>
+
+                            <article class="game-card game-dodge">
+                                <div class="game-art">
+                                    <div class="dodge-orb orb-one"></div>
+                                    <div class="dodge-orb orb-two"></div>
+                                    <div class="dodge-orb orb-three"></div>
+                                    <div class="art-code">02 / SURVIVE</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta">IN DEVELOPMENT</div>
+                                    <h3>DODGE-EM-ALL</h3>
+                                    <p>Stay alert. Avoid everything. How long can you last?</p>
+                                    <span class="game-status">COMING SOON</span>
+                                </div>
+                            </article>
+
+                            <article class="game-card game-void">
+                                <div class="game-art">
+                                    <div class="void-planet"></div>
+                                    <div class="void-ring"></div>
+                                    <div class="art-code">03 / EXPLORE</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta">PLANNED PROJECT</div>
+                                    <h3>VOID RUNNER</h3>
+                                    <p>Enter the unknown. Run through an endless cosmic frontier.</p>
+                                    <span class="game-status">IN THE FUTURE</span>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="games-group" aria-hidden="true">
+                            <article class="game-card game-shoot">
+                                <div class="game-art">
+                                    <div class="art-grid"></div>
+                                    <div class="target-art"><span></span></div>
+                                    <div class="art-orb"></div>
+                                    <div class="art-code">01 / AIM</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta"><span class="playable-dot"></span> PLAYABLE</div>
+                                    <h3>SHOOT-STREAK</h3>
+                                    <p>Test your precision. Build your streak. Beat your best score.</p>
+                                    <button class="game-button play-game" data-game="shoot" tabindex="-1">PLAY NOW <span>↗</span></button>
+                                </div>
+                            </article>
+
+                            <article class="game-card game-dodge">
+                                <div class="game-art">
+                                    <div class="dodge-orb orb-one"></div>
+                                    <div class="dodge-orb orb-two"></div>
+                                    <div class="dodge-orb orb-three"></div>
+                                    <div class="art-code">02 / SURVIVE</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta">IN DEVELOPMENT</div>
+                                    <h3>DODGE-EM-ALL</h3>
+                                    <p>Stay alert. Avoid everything. How long can you last?</p>
+                                    <span class="game-status">COMING SOON</span>
+                                </div>
+                            </article>
+
+                            <article class="game-card game-void">
+                                <div class="game-art">
+                                    <div class="void-planet"></div>
+                                    <div class="void-ring"></div>
+                                    <div class="art-code">03 / EXPLORE</div>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-meta">PLANNED PROJECT</div>
+                                    <h3>VOID RUNNER</h3>
+                                    <p>Enter the unknown. Run through an endless cosmic frontier.</p>
+                                    <span class="game-status">IN THE FUTURE</span>
+                                </div>
+                            </article>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="carousel-controls">
+                    <span>DISCOVER OUR WORLDS</span>
+                    <div>
+                        <button id="carouselPrev" aria-label="Previous games">←</button>
+                        <button id="carouselNext" aria-label="Next games">→</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="features-section section" id="features">
+            <div class="section-heading reveal">
+                <div>
+                    <div class="eyebrow">OUR PHILOSOPHY / 002</div>
+                    <h2>BUILT TO BE <span class="gradient-text">DIFFERENT.</span></h2>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <article class="feature-card reveal">
+                    <div class="feature-icon">01</div>
+                    <h3>PLAYER FIRST</h3>
+                    <p>Every experience starts with the player. We focus on responsive controls, meaningful gameplay and enjoyable interactions.</p>
+                    <span class="feature-line"></span>
+                </article>
+                <article class="feature-card reveal">
+                    <div class="feature-icon">02</div>
+                    <h3>EXPERIMENTAL IDEAS</h3>
+                    <p>We explore fresh concepts, unusual mechanics and new ways to make browser-based gaming exciting.</p>
+                    <span class="feature-line"></span>
+                </article>
+                <article class="feature-card reveal">
+                    <div class="feature-icon">03</div>
+                    <h3>BUILT WITH PASSION</h3>
+                    <p>From the first sketch to the final interaction, every project is an opportunity to learn, improve and create.</p>
+                    <span class="feature-line"></span>
+                </article>
+            </div>
+        </section>
+
+        <!-- STUDIO -->
+        <section class="studio-section section" id="studio">
+            <div class="studio-visual reveal">
+                <div class="studio-frame">
+                    <div class="studio-symbol">K<span>.</span></div>
+                    <div class="studio-corner corner-tl"></div>
+                    <div class="studio-corner corner-br"></div>
+                    <div class="studio-caption">KIWAMI / CREATIVE DIVISION</div>
+                </div>
+            </div>
+
+            <div class="studio-content reveal">
+                <div class="eyebrow">ABOUT THE STUDIO / 003</div>
+                <h2>WE DON'T JUST<br>BUILD GAMES.<br><span class="gradient-text">WE FORGE WORLDS.</span></h2>
+                <p>
+                    KIWAMI is an independent gaming and development project
+                    built around creativity, experimentation and interactive
+                    experiences.
+                </p>
+                <p>
+                    We are constantly learning, building and pushing our ideas
+                    further — one project at a time.
+                </p>
+                <a href="#founder" class="text-link">MEET THE DEVELOPER <span>↗</span></a>
+            </div>
+        </section>
+
+        <!-- FOUNDER -->
+        <section class="founder-section section" id="founder">
+            <div class="section-heading reveal">
+                <div>
+                    <div class="eyebrow">BEHIND THE PROJECT / 004</div>
+                    <h2>THE <span class="gradient-text">BUILDER.</span></h2>
+                </div>
+            </div>
+
+            <div class="founder-card reveal">
+                <div class="founder-avatar">
+                    <div class="avatar-glow"></div>
+                    <span>Y</span>
+                    <div class="avatar-tag">FOUNDER</div>
+                </div>
+                <div class="founder-details">
+                    <div class="eyebrow">CREATOR / DEVELOPER</div>
+                    <h3>YOUSUF VP</h3>
+                    <p class="founder-role">Founder · Developer</p>
+                    <p class="founder-description">
+                        Building interactive digital experiences, exploring
+                        game development and turning ideas into working projects.
+                    </p>
+
+                    <div class="skills-list">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JAVASCRIPT</span>
+                        <span>GAME DEVELOPMENT</span>
+                        <span>AI AUTOMATION</span>
+                        <span>UI DESIGN</span>
+                    </div>
+                </div>
+                <div class="founder-index">K / 001</div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section section reveal">
+            <div class="cta-glow"></div>
+            <div class="eyebrow">YOUR NEXT EXPERIENCE STARTS HERE</div>
+            <h2>READY TO GO <span class="gradient-text">EXTREME?</span></h2>
+            <p>Explore the games. Experience the ideas. Discover KIWAMI.</p>
+            <a href="#games" class="button button-primary">ENTER THE GAMEVERSE <span>↗</span></a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <a class="brand" href="#home">KIWAMI<span>.</span></a>
+                <p>Extreme gaming experiences.<br>Forged for the experience.</p>
+            </div>
+
+            <div class="footer-column">
+                <h4>EXPLORE</h4>
+                <a href="#home">Home</a>
+                <a href="#games">Games</a>
+                <a href="#features">Features</a>
+                <a href="#studio">Studio</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>PROJECTS</h4>
+                <a href="#games">Shoot-Streak</a>
+                <a href="#games">Dodge-Em-All</a>
+                <a href="#games">Void Runner</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>THE STUDIO</h4>
+                <a href="#founder">Founder</a>
+                <a href="#studio">About KIWAMI</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© <span id="year"></span> KIWAMI. ALL RIGHTS RESERVED.</span>
+            <span>FORGED FOR THE EXPERIENCE.</span>
+            <a href="#home">BACK TO TOP ↑</a>
+        </div>
+    </footer>
+
+    <!-- SHOOT-STREAK GAME -->
+    <div class="game-modal" id="shootModal" aria-hidden="true">
+        <div class="game-panel">
+            <div class="game-panel-header">
+                <div>
+                    <div class="eyebrow">KIWAMI ARCADE / 001</div>
+                    <h2>SHOOT-STREAK</h2>
+                </div>
+                <button class="modal-close" id="closeShoot" aria-label="Close game">×</button>
+            </div>
+
+            <div class="game-hud">
+                <div><span>SCORE</span><strong id="shootScore">0</strong></div>
+                <div><span>TIME</span><strong id="shootTime">30</strong></div>
+                <div><span>STREAK</span><strong id="shootStreak">0</strong></div>
+                <div><span>BEST</span><strong id="shootBest">0</strong></div>
+            </div>
+
+            <div class="shoot-arena" id="shootArena">
+                <div class="arena-message" id="arenaMessage">
+                    <h3>READY?</h3>
+                    <p>Hit as many targets as you can in 30 seconds.</p>
+                    <button class="button button-primary" id="startShoot">START GAME</button>
+                </div>
+                <button class="shoot-target" id="shootTarget" aria-label="Hit target" hidden>
+                    <span></span>
+                </button>
+            </div>
+
+            <div class="game-panel-footer">
+                <span>30 SECOND CHALLENGE</span>
+                <span>PRECISION IS EVERYTHING.</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
