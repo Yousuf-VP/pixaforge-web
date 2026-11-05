@@ -1,17 +1,17 @@
 
 /* ==========================================
    KIWAMI — MAIN WEBSITE
-   + COOKIE EMPEROR — PLAYABLE FIRST BUILD
+   COOKIE EMPEROR — PLAYABLE FIRST BUILD
 ========================================== */
 
 "use strict";
 
-// ------------------------------------------
-// WEBSITE INITIALIZATION
-// ------------------------------------------
-
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+
+// ==========================================
+// WEBSITE INITIALIZATION
+// ==========================================
 
 const loader = $("#pageLoader");
 const header = $("#siteHeader");
@@ -24,12 +24,13 @@ window.addEventListener("load", () => {
 
 $("#year").textContent = new Date().getFullYear();
 
-// Generate decorative stars.
+// Decorative stars.
 const stars = $("#stars");
 
 if (stars) {
   for (let i = 0; i < 55; i++) {
     const star = document.createElement("span");
+
     star.style.position = "absolute";
     star.style.left = `${Math.random() * 100}%`;
     star.style.top = `${Math.random() * 100}%`;
@@ -38,11 +39,12 @@ if (stars) {
     star.style.borderRadius = "50%";
     star.style.background = "#ffffff";
     star.style.opacity = `${0.2 + Math.random() * 0.65}`;
+
     stars.appendChild(star);
   }
 }
 
-// Header scroll appearance.
+// Header scroll effect.
 window.addEventListener("scroll", () => {
   header?.classList.toggle("scrolled", window.scrollY > 25);
 }, { passive: true });
@@ -76,7 +78,9 @@ if ("IntersectionObserver" in window) {
         );
       });
     });
-  }, { rootMargin: "-35% 0px -55% 0px" });
+  }, {
+    rootMargin: "-35% 0px -55% 0px"
+  });
 
   sections.forEach(section => sectionObserver.observe(section));
 }
@@ -90,140 +94,130 @@ if ("IntersectionObserver" in window) {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12 });
+  }, {
+    threshold: 0.12
+  });
 
   $$(".reveal").forEach(element => revealObserver.observe(element));
 } else {
   $$(".reveal").forEach(element => element.classList.add("visible"));
 }
 
-// ------------------------------------------
-// GAME CAROUSEL
-// ------------------------------------------
+// ==========================================
+// KIWAMI — INFINITE GAME CAROUSEL
+// ==========================================
 
-const carouselWindow = $("#carouselWindow");
 const gamesTrack = $("#gamesTrack");
-const carouselProgress = $("#carouselProgress");
+const carouselWindow = $("#carouselWindow");
 const previousButton = $("#carouselPrev");
 const nextButton = $("#carouselNext");
 
-let carouselIndex = 0;
-let carouselTimer = null;
-let carouselPaused = false;
+let carouselAnimation = null;
 
-function getCarouselStep() {
-  const card = $(".game-card", gamesTrack);
-  if (!card) return 0;
+function initializeInfiniteCarousel() {
+  if (!gamesTrack || gamesTrack.dataset.initialized === "true") {
+    return;
+  }
 
-  const gap = parseFloat(getComputedStyle(gamesTrack).gap) || 0;
-  return card.getBoundingClientRect().width + gap;
+  // Collect original cards.
+  const originalCards = [...gamesTrack.children];
+
+  if (originalCards.length === 0) return;
+
+  // Put original cards into one group.
+  const firstGroup = document.createElement("div");
+  firstGroup.className = "games-group";
+
+  originalCards.forEach(card => {
+    firstGroup.appendChild(card);
+  });
+
+  // Duplicate the group for the seamless loop.
+  const secondGroup = firstGroup.cloneNode(true);
+
+  secondGroup.setAttribute("aria-hidden", "true");
+
+  // Prevent duplicate interactive controls from receiving keyboard focus.
+  secondGroup.querySelectorAll("button, a, input").forEach(element => {
+    element.setAttribute("tabindex", "-1");
+  });
+
+  // Replace the original track contents.
+  gamesTrack.replaceChildren(firstGroup, secondGroup);
+
+  gamesTrack.dataset.initialized = "true";
 }
 
-function getMaxCarouselIndex() {
-  if (!gamesTrack || !carouselWindow) return 0;
+// Initialize the carousel.
+initializeInfiniteCarousel();
 
-  const maxScroll = gamesTrack.scrollWidth - carouselWindow.clientWidth;
-  return Math.max(0, Math.ceil(maxScroll / getCarouselStep()));
+// Get the CSS animation.
+function getCarouselAnimation() {
+  if (!gamesTrack) return null;
+
+  if (!carouselAnimation) {
+    carouselAnimation = gamesTrack.getAnimations()[0] || null;
+  }
+
+  return carouselAnimation;
 }
 
-function updateCarousel() {
-  if (!gamesTrack || !carouselProgress) return;
+// Pause when the user hovers over the carousel.
+carouselWindow?.addEventListener("mouseenter", () => {
+  gamesTrack.style.animationPlayState = "paused";
+});
 
-  const maxIndex = getMaxCarouselIndex();
-  carouselIndex = Math.min(carouselIndex, maxIndex);
+carouselWindow?.addEventListener("mouseleave", () => {
+  gamesTrack.style.animationPlayState = "running";
+});
 
-  const step = getCarouselStep();
-  gamesTrack.style.transform = `translateX(-${carouselIndex * step}px)`;
+// Pause while the user focuses a carousel control.
+carouselWindow?.addEventListener("focusin", () => {
+  gamesTrack.style.animationPlayState = "paused";
+});
 
-  const progress = maxIndex === 0
-    ? 100
-    : ((carouselIndex + 1) / (maxIndex + 1)) * 100;
+carouselWindow?.addEventListener("focusout", event => {
+  if (!carouselWindow.contains(event.relatedTarget)) {
+    gamesTrack.style.animationPlayState = "running";
+  }
+});
 
-  carouselProgress.style.width = `${progress}%`;
-}
+// Pause on mobile touch.
+carouselWindow?.addEventListener("touchstart", () => {
+  gamesTrack.style.animationPlayState = "paused";
+}, { passive: true });
 
+carouselWindow?.addEventListener("touchend", () => {
+  gamesTrack.style.animationPlayState = "running";
+}, { passive: true });
+
+carouselWindow?.addEventListener("touchcancel", () => {
+  gamesTrack.style.animationPlayState = "running";
+}, { passive: true });
+
+// Arrow controls adjust the carousel animation position.
 function moveCarousel(direction) {
-  const maxIndex = getMaxCarouselIndex();
-  if (maxIndex === 0) return;
+  const animation = getCarouselAnimation();
 
-  carouselIndex += direction;
+  if (!animation || !gamesTrack) return;
 
-  if (carouselIndex > maxIndex) carouselIndex = 0;
-  if (carouselIndex < 0) carouselIndex = maxIndex;
+  const duration = Number(animation.effect?.getTiming().duration) || 32000;
+  const currentTime = Number(animation.currentTime) || 0;
 
-  updateCarousel();
+  let nextTime = currentTime + direction * 5000;
+
+  nextTime = ((nextTime % duration) + duration) % duration;
+
+  animation.currentTime = nextTime;
+  gamesTrack.style.animationPlayState = "running";
 }
 
 previousButton?.addEventListener("click", () => moveCarousel(-1));
 nextButton?.addEventListener("click", () => moveCarousel(1));
 
-function stopCarouselTimer() {
-  if (carouselTimer) clearInterval(carouselTimer);
-  carouselTimer = null;
-}
-
-function startCarouselTimer() {
-  stopCarouselTimer();
-
-  if (carouselPaused || getMaxCarouselIndex() === 0) return;
-
-  carouselTimer = setInterval(() => {
-    if (!carouselPaused) moveCarousel(1);
-  }, 4500);
-}
-
-carouselWindow?.addEventListener("mouseenter", () => {
-  carouselPaused = true;
-  stopCarouselTimer();
-});
-
-carouselWindow?.addEventListener("mouseleave", () => {
-  carouselPaused = false;
-  startCarouselTimer();
-});
-
-carouselWindow?.addEventListener("focusin", () => {
-  carouselPaused = true;
-  stopCarouselTimer();
-});
-
-carouselWindow?.addEventListener("focusout", () => {
-  carouselPaused = false;
-  startCarouselTimer();
-});
-
-// Basic touch swipe.
-let touchStartX = 0;
-
-carouselWindow?.addEventListener("touchstart", event => {
-  touchStartX = event.changedTouches[0].clientX;
-  carouselPaused = true;
-  stopCarouselTimer();
-}, { passive: true });
-
-carouselWindow?.addEventListener("touchend", event => {
-  const difference = touchStartX - event.changedTouches[0].clientX;
-
-  if (Math.abs(difference) > 40) {
-    moveCarousel(difference > 0 ? 1 : -1);
-  }
-
-  carouselPaused = false;
-  startCarouselTimer();
-}, { passive: true });
-
-window.addEventListener("resize", () => {
-  carouselIndex = 0;
-  updateCarousel();
-  startCarouselTimer();
-});
-
-updateCarousel();
-startCarouselTimer();
-
-// ------------------------------------------
+// ==========================================
 // COOKIE EMPEROR — GAME DATA
-// ------------------------------------------
+// ==========================================
 
 const GAME_SAVE_KEY = "pixaforge_cookie_emperor_economy_v1";
 
@@ -326,6 +320,10 @@ let gameState = createInitialGameState();
 let activeShopTab = "upgrades";
 let toastTimeout = null;
 
+// ==========================================
+// SAVE AND LOAD
+// ==========================================
+
 function loadGame() {
   try {
     const saved = localStorage.getItem(GAME_SAVE_KEY);
@@ -353,12 +351,13 @@ function loadGame() {
     gameState.cookies = Math.max(0, Number(gameState.cookies) || 0);
     gameState.totalBaked = Math.max(0, Number(gameState.totalBaked) || 0);
     gameState.clickPower = Math.max(1, Number(gameState.clickPower) || 1);
+
     gameState.productionMultiplier = Math.max(
       1,
       Number(gameState.productionMultiplier) || 1
     );
 
-    // Offline production: maximum 8 hours at 50% production.
+    // Offline production: up to 8 hours at 50% production.
     const elapsedSeconds = Math.max(
       0,
       (Date.now() - Number(gameState.lastSaved || Date.now())) / 1000
@@ -372,7 +371,9 @@ function loadGame() {
       gameState.totalBaked += offlineCookies;
 
       setTimeout(() => {
-        showToast(`Welcome back! +${formatNumber(offlineCookies)} offline cookies`);
+        showToast(
+          `Welcome back! +${formatNumber(offlineCookies)} offline cookies`
+        );
       }, 500);
     }
   } catch (error) {
@@ -384,21 +385,30 @@ function loadGame() {
 function saveGame(showMessage = false) {
   try {
     gameState.lastSaved = Date.now();
-    localStorage.setItem(GAME_SAVE_KEY, JSON.stringify(gameState));
+
+    localStorage.setItem(
+      GAME_SAVE_KEY,
+      JSON.stringify(gameState)
+    );
 
     const status = $("#saveStatus");
-    if (status) status.textContent = "GAME SAVED";
 
-    if (showMessage) showToast("Kingdom saved successfully.");
+    if (status) {
+      status.textContent = "GAME SAVED";
+    }
+
+    if (showMessage) {
+      showToast("Kingdom saved successfully.");
+    }
   } catch (error) {
     console.error("Could not save Cookie Emperor:", error);
     showToast("Save failed. Check your browser storage.");
   }
 }
 
-// ------------------------------------------
+// ==========================================
 // GAME CALCULATIONS
-// ------------------------------------------
+// ==========================================
 
 function getBuildingCount(id) {
   return Math.max(0, Number(gameState.buildings[id]) || 0);
@@ -406,14 +416,16 @@ function getBuildingCount(id) {
 
 function getBuildingCost(building) {
   const owned = getBuildingCount(building.id);
-  return Math.ceil(building.baseCost * Math.pow(1.15, owned));
+
+  return Math.ceil(
+    building.baseCost * Math.pow(1.15, owned)
+  );
 }
 
 function getTotalBuildings() {
-  return BUILDINGS.reduce(
-    (total, building) => total + getBuildingCount(building.id),
-    0
-  );
+  return BUILDINGS.reduce((total, building) => {
+    return total + getBuildingCount(building.id);
+  }, 0);
 }
 
 function getCookiesPerSecond() {
@@ -449,9 +461,9 @@ function formatNumber(number) {
   return Math.floor(number).toString();
 }
 
-// ------------------------------------------
+// ==========================================
 // GAME RENDERING
-// ------------------------------------------
+// ==========================================
 
 function renderGame() {
   const cps = getCookiesPerSecond();
@@ -471,17 +483,28 @@ function renderGame() {
 
 function renderShop() {
   const shopList = $("#shopList");
+
   if (!shopList) return;
 
   shopList.replaceChildren();
 
-  const items = activeShopTab === "buildings" ? BUILDINGS : UPGRADES;
+  const items = activeShopTab === "buildings"
+    ? BUILDINGS
+    : UPGRADES;
 
   items.forEach(item => {
     const isBuilding = activeShopTab === "buildings";
-    const owned = isBuilding ? getBuildingCount(item.id) : 0;
+
+    const owned = isBuilding
+      ? getBuildingCount(item.id)
+      : 0;
+
     const purchased = gameState.purchasedUpgrades.includes(item.id);
-    const cost = isBuilding ? getBuildingCost(item) : item.cost;
+
+    const cost = isBuilding
+      ? getBuildingCost(item)
+      : item.cost;
+
     const unavailable = gameState.cookies < cost || purchased;
 
     const button = document.createElement("button");
@@ -499,6 +522,7 @@ function renderShop() {
     name.textContent = item.name;
 
     const description = document.createElement("small");
+
     description.textContent = isBuilding
       ? `${item.description} Owned: ${owned}`
       : purchased
@@ -509,22 +533,28 @@ function renderShop() {
 
     const price = document.createElement("span");
     price.className = "shop-item-cost";
-    price.textContent = purchased ? "OWNED" : `${formatNumber(cost)} cookies`;
+
+    price.textContent = purchased
+      ? "OWNED"
+      : `${formatNumber(cost)} cookies`;
 
     button.append(icon, info, price);
 
     button.addEventListener("click", () => {
-      if (isBuilding) buyBuilding(item.id);
-      else buyUpgrade(item.id);
+      if (isBuilding) {
+        buyBuilding(item.id);
+      } else {
+        buyUpgrade(item.id);
+      }
     });
 
     shopList.appendChild(button);
   });
 }
 
-// ------------------------------------------
+// ==========================================
 // GAME ACTIONS
-// ------------------------------------------
+// ==========================================
 
 function bakeCookie() {
   gameState.cookies += gameState.clickPower;
@@ -548,6 +578,7 @@ function updateGameNumbers() {
 
 function buyBuilding(id) {
   const building = BUILDINGS.find(item => item.id === id);
+
   if (!building) return;
 
   const cost = getBuildingCost(building);
@@ -558,15 +589,19 @@ function buyBuilding(id) {
   }
 
   gameState.cookies -= cost;
-  gameState.buildings[id] = getBuildingCount(id) + 1;
+
+  gameState.buildings[id] =
+    getBuildingCount(id) + 1;
 
   updateGameNumbers();
   saveGame();
+
   showToast(`${building.name} added to your kingdom!`);
 }
 
 function buyUpgrade(id) {
   const upgrade = UPGRADES.find(item => item.id === id);
+
   if (!upgrade) return;
 
   if (gameState.purchasedUpgrades.includes(id)) return;
@@ -589,12 +624,13 @@ function buyUpgrade(id) {
 
   updateGameNumbers();
   saveGame();
+
   showToast(`${upgrade.name} unlocked!`);
 }
 
-// ------------------------------------------
+// ==========================================
 // GAME UI EVENTS
-// ------------------------------------------
+// ==========================================
 
 const gameOverlay = $("#cookieGame");
 
@@ -611,27 +647,35 @@ function closeCookieEmperor() {
   gameOverlay.classList.remove("open");
   gameOverlay.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+
   saveGame();
 }
 
+// Launch game from original game card.
 $$("[data-launch='cookie']").forEach(button => {
   button.addEventListener("click", openCookieEmperor);
 });
 
 $("#closeGame")?.addEventListener("click", closeCookieEmperor);
 
-$("#saveGame")?.addEventListener("click", () => saveGame(true));
+$("#saveGame")?.addEventListener("click", () => {
+  saveGame(true);
+});
 
 $("#bakeCookie")?.addEventListener("click", bakeCookie);
 
+// Kingdom naming.
 $("#kingdomName")?.addEventListener("input", event => {
   const value = event.target.value.trim().slice(0, 22);
 
   gameState.kingdomName = value || "Cookie Kingdom";
+
   $("#kingdomHeading").textContent = gameState.kingdomName;
+
   saveGame();
 });
 
+// Shop tabs.
 $$(".shop-tab").forEach(button => {
   button.addEventListener("click", () => {
     activeShopTab = button.dataset.tab;
@@ -644,51 +688,62 @@ $$(".shop-tab").forEach(button => {
   });
 });
 
+// Escape key closes game.
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && gameOverlay.classList.contains("open")) {
+  if (
+    event.key === "Escape" &&
+    gameOverlay.classList.contains("open")
+  ) {
     closeCookieEmperor();
   }
 });
 
-// ------------------------------------------
-// GAME PRODUCTION & AUTO-SAVING
-// ------------------------------------------
+// ==========================================
+// GAME PRODUCTION
+// ==========================================
 
 function gameTick() {
   const production = getCookiesPerSecond();
 
-  if (production > 0) {
-    const earned = production;
+  if (production <= 0) return;
 
-    gameState.cookies += earned;
-    gameState.totalBaked += earned;
+  gameState.cookies += production;
+  gameState.totalBaked += production;
 
-    $("#cookieCount").textContent = formatNumber(gameState.cookies);
-    $("#totalBaked").textContent = formatNumber(gameState.totalBaked);
+  $("#cookieCount").textContent = formatNumber(gameState.cookies);
+  $("#totalBaked").textContent = formatNumber(gameState.totalBaked);
 
-    // Refresh shop affordability.
-    if (Math.floor(gameState.cookies) % 5 === 0) {
-      renderShop();
-    }
+  // Update shop affordability as the player earns cookies.
+  if (Math.floor(gameState.cookies) % 5 === 0) {
+    renderShop();
   }
 }
 
 setInterval(gameTick, 1000);
-setInterval(() => saveGame(), 10000);
+
+// Automatic save every 10 seconds.
+setInterval(() => {
+  saveGame();
+}, 10000);
 
 // Save when leaving or hiding the page.
-window.addEventListener("pagehide", () => saveGame());
-
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") saveGame();
+window.addEventListener("pagehide", () => {
+  saveGame();
 });
 
-// ------------------------------------------
-// GAME TOAST
-// ------------------------------------------
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    saveGame();
+  }
+});
+
+// ==========================================
+// GAME NOTIFICATIONS
+// ==========================================
 
 function showToast(message) {
   const toast = $("#gameToast");
+
   if (!toast) return;
 
   toast.textContent = message;
@@ -701,12 +756,13 @@ function showToast(message) {
   }, 2500);
 }
 
-// ------------------------------------------
+// ==========================================
 // START COOKIE EMPEROR
-// ------------------------------------------
+// ==========================================
 
 loadGame();
 renderGame();
 
 console.log("KIWAMI initialized.");
+console.log("Infinite game carousel initialized.");
 console.log("COOKIE EMPEROR initialized.");
