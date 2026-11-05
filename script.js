@@ -71,7 +71,7 @@ drawStars();
 window.addEventListener("resize", resizeCanvas);
 
 
-// HEADER SCROLL EFFECT
+// HEADER
 
 const siteHeader = document.getElementById("siteHeader");
 
@@ -97,6 +97,16 @@ navLinks.forEach(link => {
         mainNav.classList.remove("open");
         menuToggle.setAttribute("aria-expanded", "false");
     });
+});
+
+document.addEventListener("click", event => {
+    if (
+        !mainNav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+    ) {
+        mainNav.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+    }
 });
 
 
@@ -140,25 +150,45 @@ const revealObserver = new IntersectionObserver(entries => {
 revealElements.forEach(element => revealObserver.observe(element));
 
 
-// CAROUSEL DIRECTION CONTROLS
+// CAROUSEL
 
 const gamesTrack = document.getElementById("gamesTrack");
 const carouselPrev = document.getElementById("carouselPrev");
 const carouselNext = document.getElementById("carouselNext");
 const gamesWindow = document.getElementById("gamesWindow");
 
+function isMobileLayout() {
+    return window.matchMedia("(max-width: 700px)").matches;
+}
+
 carouselNext.addEventListener("click", () => {
-    gamesTrack.style.animationDirection = "normal";
-    gamesTrack.style.animationPlayState = "running";
+    if (isMobileLayout()) {
+        gamesWindow.scrollBy({
+            left: gamesWindow.clientWidth * 0.8,
+            behavior: "smooth"
+        });
+    } else {
+        gamesTrack.style.animationDirection = "normal";
+        gamesTrack.style.animationPlayState = "running";
+    }
 });
 
 carouselPrev.addEventListener("click", () => {
-    gamesTrack.style.animationDirection = "reverse";
-    gamesTrack.style.animationPlayState = "running";
+    if (isMobileLayout()) {
+        gamesWindow.scrollBy({
+            left: -gamesWindow.clientWidth * 0.8,
+            behavior: "smooth"
+        });
+    } else {
+        gamesTrack.style.animationDirection = "reverse";
+        gamesTrack.style.animationPlayState = "running";
+    }
 });
 
 gamesWindow.addEventListener("mouseenter", () => {
-    gamesTrack.style.animationPlayState = "paused";
+    if (!isMobileLayout()) {
+        gamesTrack.style.animationPlayState = "paused";
+    }
 });
 
 gamesWindow.addEventListener("mouseleave", () => {
@@ -173,7 +203,7 @@ document.getElementById("currentYear").textContent =
 
 
 // ==========================================
-// SHOOT-STREAK GAME
+// SHOOT-STREAK
 // ==========================================
 
 const shootModal = document.getElementById("shootModal");
@@ -201,7 +231,7 @@ let bestScore = Number(localStorage.getItem("kiwamiShootBest")) || 0;
 bestValue.textContent = bestScore;
 
 
-// OPEN GAME
+// OPEN
 
 function openShootGame() {
     shootModal.classList.add("open");
@@ -216,7 +246,7 @@ document.querySelectorAll('[data-game="shoot"]').forEach(button => {
 });
 
 
-// CLOSE GAME
+// CLOSE
 
 function closeShootGame() {
     stopShootGame();
@@ -237,7 +267,7 @@ document.addEventListener("keydown", event => {
 });
 
 
-// RESET GAME
+// RESET
 
 function resetShootGame() {
     stopShootGame();
@@ -254,6 +284,7 @@ function resetShootGame() {
     shootTarget.style.display = "none";
 
     arenaMessage.classList.remove("hidden");
+
     arenaMessage.innerHTML = `
         <span class="arena-message-icon">✳</span>
         <h3>READY?</h3>
@@ -265,7 +296,7 @@ function resetShootGame() {
 }
 
 
-// STOP GAME
+// STOP
 
 function stopShootGame() {
     gameRunning = false;
@@ -279,7 +310,7 @@ function stopShootGame() {
 }
 
 
-// MOVE TARGET
+// TARGET POSITION
 
 function moveTarget() {
     const arenaRect = shootArena.getBoundingClientRect();
@@ -303,7 +334,7 @@ function moveTarget() {
 }
 
 
-// START GAME
+// START
 
 function startShootGame() {
     resetShootGame();
@@ -312,6 +343,7 @@ function startShootGame() {
     arenaMessage.classList.add("hidden");
 
     shootTarget.style.display = "flex";
+
     startShoot.textContent = "GAME RUNNING";
     startShoot.disabled = true;
 
@@ -331,7 +363,7 @@ function startShootGame() {
 startShoot.addEventListener("click", startShootGame);
 
 
-// HIT TARGET
+// HIT
 
 shootTarget.addEventListener("click", event => {
     event.stopPropagation();
@@ -348,7 +380,7 @@ shootTarget.addEventListener("click", event => {
 });
 
 
-// MISSED TARGET
+// MISS
 
 shootArena.addEventListener("click", event => {
     if (!gameRunning) return;
@@ -363,7 +395,7 @@ shootArena.addEventListener("click", event => {
 });
 
 
-// END GAME
+// END
 
 function endShootGame() {
     stopShootGame();
@@ -391,7 +423,7 @@ function endShootGame() {
 }
 
 
-// PREVENT ACCIDENTAL PAGE SCROLL WHILE PLAYING ON MOBILE
+// MOBILE TOUCH SUPPORT
 
 shootTarget.addEventListener("touchstart", event => {
     if (gameRunning) event.preventDefault();
